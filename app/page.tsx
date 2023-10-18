@@ -7,10 +7,21 @@ import { useState, useRef } from "react";
 
 export default function Home() {
   let [optionsValue, setOptionsValue] = useState(true);
-  let [newTaskValue, setNewTaskValue] = useState<string | undefined>(undefined);
+  let [newTasksArray, setNewTasksArray] = useState<Array<string>>([]);
   let inputRef = useRef<HTMLInputElement>(null);
 
-  let tasks = false;
+  let tasks: Array<string> = [...newTasksArray];
+  let tasksArrayElements = [];
+  for (let i = 0; i < tasks.length; i++) {
+    let taskDate = new Date(Date.now()).toString();
+    let taskObject = {
+      id: i,
+      time: taskDate,
+      text: newTasksArray[i],
+      done: false,
+    };
+    tasksArrayElements.push(<NewTask key={i} taskObject={taskObject} />);
+  }
 
   return (
     <>
@@ -55,11 +66,13 @@ export default function Home() {
         ></input>
         <button
           className="text-black col-span-1 bg-green-500 rounded-md"
-          onClick={() =>
-            setNewTaskValue(
+          onClick={() => {
+            tasks.push(
               inputRef.current?.value ? inputRef.current?.value : "no Input"
-            )
-          }
+            );
+            if (inputRef.current?.value) inputRef.current.value = "";
+            setNewTasksArray(tasks);
+          }}
         >
           Add Task
         </button>
@@ -72,8 +85,8 @@ export default function Home() {
       <div className=" flex flex-col items-center justify-center w-screen gap-1 mt-5">
         <div className=" w-6/12 bg-slate-100 p-5">
           <div className=" flex flex-col items-center justify-center gap-5 ">
-            {tasks ? (
-              <NewTask inputValue={newTaskValue} />
+            {newTasksArray.length ? (
+              tasksArrayElements.reverse()
             ) : (
               <div className=" text-slate-400 bg-white w-full text-center font-bold">
                 NO TASKS
