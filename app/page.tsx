@@ -3,25 +3,33 @@
 import NewTask from "@/components/newTask";
 import OptionsOne from "@/components/optionsOne";
 import OptionsTwo from "@/components/optionsTwo";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Home() {
   let [optionsValue, setOptionsValue] = useState(true);
-  let [newTasksArray, setNewTasksArray] = useState<Array<string>>([]);
+  let [toggleUpdate, setToggleUpdate] = useState(0);
+  let [newTasksArray, setNewTasksArray] = useState<JSX.Element[]>([]);
   let inputRef = useRef<HTMLInputElement>(null);
+  let tasksArrayElements: JSX.Element[] = [...newTasksArray];
 
-  let tasks: Array<string> = [...newTasksArray];
-  let tasksArrayElements = [];
-  for (let i = 0; i < tasks.length; i++) {
-    let taskDate = new Date(Date.now()).toString();
-    let taskObject = {
-      id: i,
-      time: taskDate,
-      text: newTasksArray[i],
-      done: false,
-    };
-    tasksArrayElements.push(<NewTask key={i} taskObject={taskObject} />);
-  }
+  // to delete task
+  useEffect(() => {
+    tasksArrayElements.map((ele) => {
+      if (ele.props.taskObject.delete) {
+        let filteredTasksArrayElements = tasksArrayElements.filter(
+          (element) => {
+            if (element.key) return +element.key != ele.props.taskObject.id;
+          }
+        );
+        setNewTasksArray(filteredTasksArrayElements);
+      }
+    });
+  }, [toggleUpdate]);
+
+  // to toggle re-render when you click on delete button
+  let onRemove = (id: number) => {
+    setToggleUpdate(id);
+  };
 
   return (
     <>
@@ -67,11 +75,24 @@ export default function Home() {
         <button
           className="text-black col-span-1 bg-green-500 rounded-md"
           onClick={() => {
-            tasks.push(
-              inputRef.current?.value ? inputRef.current?.value : "no Input"
+            let taskObject = {
+              id: Date.now(),
+              time: new Date(Date.now()).toString(),
+              text: inputRef.current?.value
+                ? inputRef.current?.value
+                : "no Input",
+              done: false,
+              delete: false,
+            };
+            inputRef.current?.value ? (inputRef.current.value = "") : "";
+            tasksArrayElements.push(
+              <NewTask
+                key={taskObject.id}
+                taskObject={taskObject}
+                onRemove={onRemove}
+              />
             );
-            if (inputRef.current?.value) inputRef.current.value = "";
-            setNewTasksArray(tasks);
+            setNewTasksArray(tasksArrayElements);
           }}
         >
           Add Task
@@ -86,7 +107,7 @@ export default function Home() {
         <div className=" w-6/12 bg-slate-100 p-5">
           <div className=" flex flex-col items-center justify-center gap-5 ">
             {newTasksArray.length ? (
-              tasksArrayElements.reverse()
+              tasksArrayElements
             ) : (
               <div className=" text-slate-400 bg-white w-full text-center font-bold">
                 NO TASKS
