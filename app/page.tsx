@@ -12,21 +12,19 @@ export default function Home() {
   let inputRef = useRef<HTMLInputElement>(null);
   let tasksArrayElements: JSX.Element[] = [...newTasksArray];
 
-  // to delete task
+  // Delete task
   useEffect(() => {
-    tasksArrayElements.map((ele) => {
-      if (ele.props.taskObject.delete) {
-        let filteredTasksArrayElements = tasksArrayElements.filter(
-          (element) => {
-            if (element.key) return +element.key != ele.props.taskObject.id;
-          }
-        );
-        setNewTasksArray(filteredTasksArrayElements);
+    let filteredTasksArrayElements = tasksArrayElements.filter((element) => {
+      if (element.props.taskObject.delete) {
+        return false;
+      } else {
+        return true;
       }
     });
+    setNewTasksArray(filteredTasksArrayElements);
   }, [toggleUpdate]);
 
-  // to toggle re-render when you click on delete button
+  // Re-render Page.tsx Component
   let onRemove = (id: number) => {
     setToggleUpdate(id);
   };
