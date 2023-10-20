@@ -1,6 +1,9 @@
 import { useState } from "react";
 
-export default function NewTask(props: {
+export default function NewTask({
+  taskObject,
+  onRender,
+}: {
   taskObject: {
     id: number;
     time: string;
@@ -8,21 +11,20 @@ export default function NewTask(props: {
     done: boolean;
     delete: boolean;
   };
-  onRemove: (id: number) => void;
+  onRender: (arg: number | boolean, fromComp: string) => void;
 }) {
-  let [doneValue, setDoneValue] = useState<boolean>(props.taskObject.done);
-  let [deleteValue, setDeleteValue] = useState<boolean>(
-    props.taskObject.delete
-  );
+  let [doneValue, setDoneValue] = useState<boolean>(false);
+  let [deleteValue, setDeleteValue] = useState<boolean>(taskObject.delete);
   return (
     <div className=" grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full">
-      <div className=" text-black col-span-2">{props.taskObject.text}</div>
+      <div className=" text-black col-span-2">{taskObject.text}</div>
       {doneValue ? (
         <button
           className=" text-black col-span-1 bg-green-500 rounded-md "
           onClick={() => {
-            props.taskObject.done = false;
+            taskObject.done = false;
             setDoneValue(false);
+            onRender(taskObject.id / 2, "completed");
           }}
         >
           Done
@@ -31,8 +33,9 @@ export default function NewTask(props: {
         <button
           className=" text-black col-span-1 bg-red-500 rounded-md "
           onClick={() => {
-            props.taskObject.done = true;
+            taskObject.done = true;
             setDoneValue(true);
+            onRender(taskObject.id, "completed");
           }}
         >
           Pending
@@ -41,9 +44,9 @@ export default function NewTask(props: {
       <button
         className="text-black col-span-1 bg-red-500 rounded-md"
         onClick={() => {
-          props.taskObject.delete = true;
+          taskObject.delete = true;
           setDeleteValue(true);
-          props.onRemove(props.taskObject.id);
+          onRender(taskObject.id, "newTask");
         }}
       >
         Delete
