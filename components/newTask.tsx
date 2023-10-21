@@ -6,7 +6,7 @@ export default function NewTask({
 }: {
   taskObject: {
     id: number;
-    time: string;
+    time: string | undefined;
     text: string;
     done: boolean;
     delete: boolean;

@@ -46,16 +46,21 @@ export default function Home() {
       setUpdateCompleted(arg);
     }
   };
-
   // Input function
   let insertInput = () => {
     if (inputRef.current?.value === "") {
       inputRef.current.placeholder = "You can't add Empty Task";
       return;
     }
+    inputRef.current?.placeholder
+      ? (inputRef.current.placeholder = "Write your Task!")
+      : "";
     let taskObject = {
       id: Date.now(),
-      time: new Date(Date.now()).toString(),
+      time: new Date()
+        ?.toString()
+        ?.match(/\w+ \d+ \d+ \d+:\d+:\d+/gi)
+        ?.join(""),
       text: inputRef.current?.value ? inputRef.current?.value : "no Input",
       done: false,
       delete: false,
@@ -102,8 +107,12 @@ export default function Home() {
         <button
           className="text-black col-span-1 bg-red-500 rounded-md"
           onClick={() => {
-            setcompletedArray([]);
-            setNewTasksArray([]);
+            if (confirm("Are You Sure Delete All Tasks ?")) {
+              setcompletedArray([]);
+              setNewTasksArray([]);
+            } else {
+              return;
+            }
           }}
         >
           Delete All
@@ -138,7 +147,7 @@ export default function Home() {
         <div className=" w-6/12 bg-slate-100 p-5">
           <div className=" flex flex-col items-center justify-center gap-5 ">
             {newTasksArray.length ? (
-              tasksArrayElements
+              [...tasksArrayElements].reverse()
             ) : (
               <div className=" text-slate-400 bg-white w-full text-center font-bold">
                 NO TASKS
