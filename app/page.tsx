@@ -154,7 +154,7 @@ export default function Home() {
               [...tasksArrayElements].reverse()
             ) : (
               <div className=" text-slate-400 bg-white w-full text-center font-bold">
-                NO TASKS
+                NO TASKS!
               </div>
             )}
           </div>
