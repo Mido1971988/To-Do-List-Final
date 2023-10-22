@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from "react";
 
 export default function Home() {
   let [optionsValue, setOptionsValue] = useState(true);
+  let [showDetails, setShowDetails] = useState(false);
   let [updateDeleted, setUpdateDeleted] = useState(0);
   let [updateCompleted, setUpdateCompleted] = useState(0);
   let [newTasksArray, setNewTasksArray] = useState<JSX.Element[]>([]);
@@ -38,12 +39,14 @@ export default function Home() {
 
   // Re-render Page.tsx Component
   let onRender = (arg: number | boolean, fromComp: string) => {
-    if (fromComp === "options" && typeof arg === "boolean") {
+    if (fromComp === "options-select" && typeof arg === "boolean") {
       setOptionsValue(arg);
     } else if (fromComp === "newTask" && typeof arg === "number") {
       setUpdateDeleted(arg);
     } else if (fromComp === "completed" && typeof arg === "number") {
       setUpdateCompleted(arg);
+    } else if (fromComp === "options-details" && typeof arg === "boolean") {
+      setShowDetails(arg);
     }
   };
   // Input function
@@ -64,6 +67,7 @@ export default function Home() {
       text: inputRef.current?.value ? inputRef.current?.value : "no Input",
       done: false,
       delete: false,
+      showDetails: showDetails,
     };
     inputRef.current?.value ? (inputRef.current.value = "") : "";
     tasksArrayElements.push(
@@ -137,14 +141,14 @@ export default function Home() {
 
       {/* Options */}
       {optionsValue ? (
-        <OptionsOne selectOptions={onRender} />
+        <OptionsOne onRender={onRender} />
       ) : (
-        <OptionsTwo selectOptions={onRender} />
+        <OptionsTwo onRender={onRender} />
       )}
 
       {/* All Tasks */}
       <div className=" flex flex-col items-center justify-center w-screen gap-1 mt-5">
-        <div className=" w-6/12 bg-slate-100 p-5">
+        <div className=" w-6/12 bg-slate-100 p-7">
           <div className=" flex flex-col items-center justify-center gap-5 ">
             {newTasksArray.length ? (
               [...tasksArrayElements].reverse()

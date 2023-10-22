@@ -1,4 +1,4 @@
-import { useState } from "react";
+import TaskButtons from "./taskButtons";
 
 export default function NewTask({
   taskObject,
@@ -10,47 +10,23 @@ export default function NewTask({
     text: string;
     done: boolean;
     delete: boolean;
+    showDetails: boolean;
   };
   onRender: (arg: number | boolean, fromComp: string) => void;
 }) {
-  let [doneValue, setDoneValue] = useState<boolean>(false);
-  let [deleteValue, setDeleteValue] = useState<boolean>(taskObject.delete);
   return (
-    <div className=" grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full">
-      <div className=" text-black col-span-2">{taskObject.text}</div>
-      {doneValue ? (
-        <button
-          className=" text-black col-span-1 bg-green-500 rounded-md "
-          onClick={() => {
-            taskObject.done = false;
-            setDoneValue(false);
-            onRender(taskObject.id / 2, "completed");
-          }}
-        >
-          Done
-        </button>
+    <>
+      {taskObject.showDetails ? (
+        <div className=" grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full h-14 before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:bg-green-600 before:translate-y-[12px] before:-translate-x-[calc(100%+10px)]">
+          <div className=" text-md font-bold font-sans col-span-4">
+            ID : <span className=" font-medium">{taskObject.id}</span>
+            <br />
+            Created at : <span className=" font-medium">{taskObject.time}</span>
+          </div>
+        </div>
       ) : (
-        <button
-          className=" text-black col-span-1 bg-red-500 rounded-md "
-          onClick={() => {
-            taskObject.done = true;
-            setDoneValue(true);
-            onRender(taskObject.id, "completed");
-          }}
-        >
-          Pending
-        </button>
+        <TaskButtons taskObject={taskObject} onRender={onRender} />
       )}
-      <button
-        className="text-black col-span-1 bg-red-500 rounded-md"
-        onClick={() => {
-          taskObject.delete = true;
-          setDeleteValue(true);
-          onRender(taskObject.id, "newTask");
-        }}
-      >
-        Delete
-      </button>
-    </div>
+    </>
   );
 }
