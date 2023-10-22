@@ -17,7 +17,7 @@ export default function TaskButtons({
   let [doneValue, setDoneValue] = useState<boolean>(false);
   let [deleteValue, setDeleteValue] = useState<boolean>(taskObject.delete);
   return (
-    <div className=" grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full h-14 before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:bg-green-600 before:translate-y-[12px] before:-translate-x-[calc(100%+10px)]">
+    <div className=" grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:bg-green-600 before:top-[calc(50%-10px)] before:-left-[25px]">
       <div className=" text-black col-span-2">{taskObject.text}</div>
       {doneValue ? (
         <button
