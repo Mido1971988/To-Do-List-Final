@@ -105,11 +105,11 @@ export default function Home() {
 
       {/* Select All & Delete All */}
       <div className="grid grid-cols-2 w-6/12 m-auto mt-5 gap-20 pl-5 pr-5">
-        <button className="text-black col-span-1 bg-green-500 rounded-md">
+        <button className="text-white col-span-1 bg-green-500 rounded-md">
           Select All
         </button>
         <button
-          className="text-black col-span-1 bg-red-500 rounded-md"
+          className="text-white col-span-1 bg-red-500 rounded-md"
           onClick={() => {
             if (confirm("Are You Sure Delete All Tasks ?")) {
               setcompletedArray([]);
@@ -132,7 +132,7 @@ export default function Home() {
           ref={inputRef}
         ></input>
         <button
-          className="text-black col-span-1 bg-green-500 rounded-md"
+          className="text-white col-span-1 bg-green-500 rounded-md"
           onClick={insertInput}
         >
           Add Task
