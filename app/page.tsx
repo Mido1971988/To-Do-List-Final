@@ -1,26 +1,25 @@
 "use client";
 
 import NewTask from "@/components/newTask";
-import OptionsOne from "@/components/optionsOne";
-import OptionsTwo from "@/components/optionsTwo";
+import Options from "@/components/options";
 import { useState, useRef, useEffect } from "react";
+import { TaskObject } from "@/types/TaskObject.types";
 
 export default function Home() {
-  let [optionsValue, setOptionsValue] = useState(true);
-  let [showDetails, setShowDetails] = useState(false);
   let [updateDeleted, setUpdateDeleted] = useState(0);
   let [updateCompleted, setUpdateCompleted] = useState(0);
-  let [newTasksArray, setNewTasksArray] = useState<JSX.Element[]>([]);
-  let [completedArray, setcompletedArray] = useState<JSX.Element[]>([]);
+  let [updateDetails, setUpdateDetails] = useState(false);
+  let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
+  let [completedArray, setcompletedArray] = useState<TaskObject[]>([]);
   let inputRef = useRef<HTMLInputElement>(null);
-  let tasksArrayElements: JSX.Element[] = [...newTasksArray];
+  let tasksArrayObjects = [...newTasksArray];
 
   // Delete task
   useEffect(() => {
-    let filteredTasksArrayElements = tasksArrayElements.filter((element) => {
-      if (element.props.taskObject.delete) {
-        element.props.taskObject.done = false;
-        setUpdateCompleted(element.props.taskObject.id / 3);
+    let filteredTasksArrayElements = tasksArrayObjects.filter((taskObject) => {
+      if (taskObject.delete) {
+        taskObject.done = false;
+        setUpdateCompleted(taskObject.id / 3);
         return false;
       } else {
         return true;
@@ -31,22 +30,32 @@ export default function Home() {
 
   // Count no. of Completed Tasks
   useEffect(() => {
-    let filteredCompletedTasksArray = tasksArrayElements.filter((element) => {
-      if (element.props.taskObject.done) return true;
+    let filteredCompletedTasksArray = tasksArrayObjects.filter((taskObject) => {
+      if (taskObject.done) return true;
     });
     setcompletedArray(filteredCompletedTasksArray);
   }, [updateCompleted]);
 
+  // to Show Details
+  useEffect(() => {
+    tasksArrayObjects.map((taskObject) => {
+      if (taskObject.selected && updateDetails) {
+        taskObject.showDetails = true;
+      } else if (taskObject.selected && !updateDetails) {
+        taskObject.showDetails = false;
+      }
+    });
+    setNewTasksArray(tasksArrayObjects);
+  }, [updateDetails]);
+
   // Re-render Page.tsx Component
-  let onRender = (arg: number | boolean, fromComp: string) => {
-    if (fromComp === "options-select" && typeof arg === "boolean") {
-      setOptionsValue(arg);
-    } else if (fromComp === "newTask" && typeof arg === "number") {
+  let onRender = (arg: number | boolean, mission: string) => {
+    if (mission === "deleteTask" && typeof arg === "number") {
       setUpdateDeleted(arg);
-    } else if (fromComp === "completed" && typeof arg === "number") {
+    } else if (mission === "completed" && typeof arg === "number") {
       setUpdateCompleted(arg);
-    } else if (fromComp === "options-details" && typeof arg === "boolean") {
-      setShowDetails(arg);
+    } else if (mission === "details" && typeof arg === "boolean") {
+      setUpdateDetails(arg);
     }
   };
   // Input function
@@ -67,17 +76,14 @@ export default function Home() {
       text: inputRef.current?.value ? inputRef.current?.value : "no Input",
       done: false,
       delete: false,
-      showDetails: showDetails,
+      edited: false,
+      editedTime: "",
+      selected: false,
+      showDetails: false,
     };
     inputRef.current?.value ? (inputRef.current.value = "") : "";
-    tasksArrayElements.push(
-      <NewTask
-        key={taskObject.id}
-        taskObject={taskObject}
-        onRender={onRender}
-      />
-    );
-    setNewTasksArray(tasksArrayElements);
+    tasksArrayObjects.unshift(taskObject);
+    setNewTasksArray(tasksArrayObjects);
   };
 
   return (
@@ -140,18 +146,20 @@ export default function Home() {
       </div>
 
       {/* Options */}
-      {optionsValue ? (
-        <OptionsOne onRender={onRender} />
-      ) : (
-        <OptionsTwo onRender={onRender} />
-      )}
+      <Options onRender={onRender} tasks={tasksArrayObjects} />
 
       {/* All Tasks */}
       <div className=" flex flex-col items-center justify-center w-screen gap-1 mt-5">
         <div className=" w-6/12 bg-slate-100 p-7">
           <div className=" flex flex-col items-center justify-center gap-5 ">
-            {newTasksArray.length ? (
-              [...tasksArrayElements].reverse()
+            {tasksArrayObjects.length ? (
+              tasksArrayObjects.map((taskObject) => (
+                <NewTask
+                  key={taskObject.id}
+                  onRender={onRender}
+                  taskObject={taskObject}
+                />
+              ))
             ) : (
               <div className=" text-slate-400 bg-white w-full text-center font-bold">
                 NO TASKS

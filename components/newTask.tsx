@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function NewTask({
   taskObject,
@@ -10,18 +10,24 @@ export default function NewTask({
     text: string;
     done: boolean;
     delete: boolean;
+    edited: boolean;
+    editedTime: string | undefined;
+    selected: boolean;
     showDetails: boolean;
   };
-  onRender: (arg: number | boolean, fromComp: string) => void;
+  onRender: (arg: number | boolean, mission: string) => void;
 }) {
   let [doneValue, setDoneValue] = useState<boolean>(false);
   let [selectValue, setSelectValue] = useState<boolean>(false);
   let [deleteValue, setDeleteValue] = useState<boolean>(taskObject.delete);
+  let taskTextRef = useRef<HTMLDivElement>(null);
 
   let handleClick = (e: React.BaseSyntheticEvent) => {
     if (selectValue && e.target.children.length) {
+      taskObject.selected = false;
       setSelectValue(false);
     } else if (!selectValue && e.target.children.length) {
+      taskObject.selected = true;
       setSelectValue(true);
     } else if (e.target.innerHTML === "Pending") {
       e.target.innerHTML = "Done";
@@ -34,16 +40,36 @@ export default function NewTask({
       setDoneValue(false);
       onRender(taskObject.id / 2, "completed");
     } else if (e.target.innerHTML === "Edit") {
+      let newText = prompt("Editing The Task...");
+      if (newText) {
+        if (taskTextRef.current?.innerHTML) {
+          taskTextRef.current.innerHTML = newText;
+          taskObject.text = newText;
+          taskObject.edited = true;
+          taskObject.editedTime = new Date()
+            ?.toString()
+            ?.match(/\w+ \d+ \d+ \d+:\d+:\d+/gi)
+            ?.join("");
+        }
+      }
     }
   };
   return (
     <>
-      {taskObject.showDetails ? (
+      {taskObject.selected && taskObject.showDetails ? (
         <div className=" grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:bg-green-600 before:top-[calc(50%-10px)] before:-left-[25px]">
           <div className=" text-md font-bold font-sans col-span-4">
             ID : <span className=" font-medium">{taskObject.id}</span>
             <br />
             Created at : <span className=" font-medium">{taskObject.time}</span>
+            <br />
+            {taskObject.edited ? (
+              <span className=" font-medium">
+                Edited at : {taskObject.editedTime}
+              </span>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ) : (
@@ -55,7 +81,9 @@ export default function NewTask({
           }`}
           onClick={handleClick}
         >
-          <div className=" text-black col-span-2">{taskObject.text}</div>
+          <div ref={taskTextRef} className=" text-black col-span-2">
+            {taskObject.text}
+          </div>
           <button
             className={`${
               doneValue
@@ -66,11 +94,11 @@ export default function NewTask({
             Pending
           </button>
           <button
-            className="text-white text-center leading-5 bg-red-500 h-5 w-5 rounded-full pointer-events-auto absolute top-[calc(50%-10px)] -right-[25px]"
+            className="text-white text-center leading-5 bg-red-500 h-5 w-5 rounded-full pointer-events-auto absolute top-[calc(50%-10px)] -right-[25px] font-sans font-bold"
             onClick={() => {
               taskObject.delete = true;
               setDeleteValue(true);
-              onRender(taskObject.id, "newTask");
+              onRender(taskObject.id, "deleteTask");
             }}
           >
             X
