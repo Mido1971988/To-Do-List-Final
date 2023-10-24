@@ -8,6 +8,7 @@ import { TaskObject } from "@/types/TaskObject.types";
 export default function Home() {
   let [updateDeleted, setUpdateDeleted] = useState(0);
   let [updateCompleted, setUpdateCompleted] = useState(0);
+  let [optionsValue, setOptionsValue] = useState(false);
   let [updateDetails, setUpdateDetails] = useState(false);
   let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
   let [completedArray, setcompletedArray] = useState<TaskObject[]>([]);
@@ -49,13 +50,15 @@ export default function Home() {
   }, [updateDetails]);
 
   // Re-render Page.tsx Component
-  let onRender = (arg: number | boolean, mission: string) => {
+  let renderMainPage = (arg: number | boolean, mission: string) => {
     if (mission === "deleteTask" && typeof arg === "number") {
       setUpdateDeleted(arg);
     } else if (mission === "completed" && typeof arg === "number") {
       setUpdateCompleted(arg);
     } else if (mission === "details" && typeof arg === "boolean") {
       setUpdateDetails(arg);
+    } else if (mission === "options" && typeof arg === "boolean") {
+      setOptionsValue(arg);
     }
   };
   // Input function
@@ -146,7 +149,11 @@ export default function Home() {
       </div>
 
       {/* Options */}
-      <Options onRender={onRender} tasks={tasksArrayObjects} />
+      <Options
+        optionsValue={optionsValue}
+        renderMainPage={renderMainPage}
+        tasks={tasksArrayObjects}
+      />
 
       {/* All Tasks */}
       <div className=" flex flex-col items-center justify-center w-screen gap-1 mt-5">
@@ -156,8 +163,9 @@ export default function Home() {
               tasksArrayObjects.map((taskObject) => (
                 <NewTask
                   key={taskObject.id}
-                  onRender={onRender}
+                  renderMainPage={renderMainPage}
                   taskObject={taskObject}
+                  optionsValue={optionsValue}
                 />
               ))
             ) : (

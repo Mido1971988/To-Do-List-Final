@@ -2,13 +2,14 @@ import { useState } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
 
 export default function Options({
-  onRender,
+  optionsValue,
+  renderMainPage,
   tasks,
 }: {
-  onRender: (arg: number | boolean, fromComp: string) => void;
+  optionsValue: boolean;
+  renderMainPage: (arg: number | boolean, fromComp: string) => void;
   tasks: TaskObject[];
 }) {
-  let [optionsValue, setOptionsValue] = useState(false);
   let [detailsValue, setDetailsValue] = useState(true);
 
   let selectedCheck = () => {
@@ -31,7 +32,7 @@ export default function Options({
             onClick={() => {
               let numOfSelected = selectedCheck();
               if (numOfSelected) {
-                onRender(detailsValue, "details");
+                renderMainPage(detailsValue, "details");
                 setDetailsValue(!detailsValue);
               }
             }}
@@ -41,7 +42,7 @@ export default function Options({
           <button className=" text-black bg-red-500 rounded-md">Delete</button>
           <button
             className=" text-black bg-green-500 rounded-md"
-            onClick={() => setOptionsValue(false)}
+            onClick={() => renderMainPage(false, "options")}
           >
             Selecting
           </button>
@@ -53,7 +54,7 @@ export default function Options({
           </button>
           <button
             className=" text-white justify-items-end bg-green-500 rounded-md"
-            onClick={() => setOptionsValue(true)}
+            onClick={() => renderMainPage(true, "options")}
           >
             Select
           </button>

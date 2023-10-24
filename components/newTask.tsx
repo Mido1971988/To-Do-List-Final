@@ -1,21 +1,14 @@
 import { useState, useRef } from "react";
+import { TaskObject } from "@/types/TaskObject.types";
 
 export default function NewTask({
   taskObject,
-  onRender,
+  renderMainPage,
+  optionsValue,
 }: {
-  taskObject: {
-    id: number;
-    time: string | undefined;
-    text: string;
-    done: boolean;
-    delete: boolean;
-    edited: boolean;
-    editedTime: string | undefined;
-    selected: boolean;
-    showDetails: boolean;
-  };
-  onRender: (arg: number | boolean, mission: string) => void;
+  taskObject: TaskObject;
+  renderMainPage: (arg: number | boolean, mission: string) => void;
+  optionsValue: boolean;
 }) {
   let [doneValue, setDoneValue] = useState<boolean>(false);
   let [selectValue, setSelectValue] = useState<boolean>(false);
@@ -33,12 +26,12 @@ export default function NewTask({
       e.target.innerHTML = "Done";
       taskObject.done = true;
       setDoneValue(true);
-      onRender(taskObject.id, "completed");
+      renderMainPage(taskObject.id, "completed");
     } else if (e.target.innerHTML === "Done") {
       e.target.innerHTML = "Pending";
       taskObject.done = false;
       setDoneValue(false);
-      onRender(taskObject.id / 2, "completed");
+      renderMainPage(taskObject.id / 2, "completed");
     } else if (e.target.innerHTML === "Edit") {
       let newText = prompt("Editing The Task...");
       if (newText) {
@@ -57,7 +50,11 @@ export default function NewTask({
   return (
     <>
       {taskObject.selected && taskObject.showDetails ? (
-        <div className=" grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:bg-green-600 before:top-[calc(50%-10px)] before:-left-[25px]">
+        <div
+          className={`grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:bg-green-600 before:top-[calc(50%-10px)] before:-left-[25px] ${
+            optionsValue ? "before:absolute" : "before:hidden"
+          }`}
+        >
           <div className=" text-md font-bold font-sans col-span-4">
             ID : <span className=" font-medium">{taskObject.id}</span>
             <br />
@@ -78,7 +75,7 @@ export default function NewTask({
             selectValue
               ? "before:bg-green-600"
               : "before:border-black before:bg-white"
-          }`}
+          } ${optionsValue ? "before:absolute" : "before:hidden"}`}
           onClick={handleClick}
         >
           <div ref={taskTextRef} className=" text-black col-span-2">
@@ -98,7 +95,7 @@ export default function NewTask({
             onClick={() => {
               taskObject.delete = true;
               setDeleteValue(true);
-              onRender(taskObject.id, "deleteTask");
+              renderMainPage(taskObject.id, "deleteTask");
             }}
           >
             X
