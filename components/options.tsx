@@ -5,39 +5,43 @@ export default function Options({
   optionsValue,
   renderMainPage,
   tasks,
+  detailsValue,
 }: {
   optionsValue: boolean;
   renderMainPage: (arg: number | boolean, fromComp: string) => void;
   tasks: TaskObject[];
+  detailsValue: boolean;
 }) {
-  let [detailsValue, setDetailsValue] = useState(true);
-
+  // to Check no. of selected tasks
   let selectedCheck = () => {
     let numOfSelected = 0;
     tasks.map((task) => {
       if (task.selected) numOfSelected++;
     });
+    if (numOfSelected === 0) renderMainPage(false, "details");
     return numOfSelected;
   };
+
   return (
     <>
       {optionsValue ? (
         <div className="grid grid-cols-5 m-auto w-6/12 gap-1 mt-5">
           <button className=" text-black bg-green-500 rounded-md">Swap</button>
           <button className=" text-black bg-green-500 rounded-md">
-            Select All
+            Complete All
           </button>
           <button
-            className=" text-black bg-green-500 rounded-md"
+            className={`text-black bg-green-500 rounded-md ${
+              detailsValue ? "bg-red-500" : "bg-green-500"
+            }`}
             onClick={() => {
               let numOfSelected = selectedCheck();
               if (numOfSelected) {
-                renderMainPage(detailsValue, "details");
-                setDetailsValue(!detailsValue);
+                renderMainPage(!detailsValue, "details");
               }
             }}
           >
-            Details
+            {detailsValue ? "Details..." : "Show Details"}
           </button>
           <button className=" text-black bg-red-500 rounded-md">Delete</button>
           <button

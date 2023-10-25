@@ -9,10 +9,12 @@ export default function Home() {
   let [updateDeleted, setUpdateDeleted] = useState(0);
   let [updateCompleted, setUpdateCompleted] = useState(0);
   let [optionsValue, setOptionsValue] = useState(false);
-  let [updateDetails, setUpdateDetails] = useState(false);
+  let [selectAllValue, setSelectAllValue] = useState(true);
   let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
   let [completedArray, setcompletedArray] = useState<TaskObject[]>([]);
+  let [detailsValue, setDetailsValue] = useState(false);
   let inputRef = useRef<HTMLInputElement>(null);
+  let selectAllRef = useRef<HTMLButtonElement>(null);
   let tasksArrayObjects = [...newTasksArray];
 
   // Delete task
@@ -40,14 +42,14 @@ export default function Home() {
   // to Show Details
   useEffect(() => {
     tasksArrayObjects.map((taskObject) => {
-      if (taskObject.selected && updateDetails) {
+      if (taskObject.selected && detailsValue) {
         taskObject.showDetails = true;
-      } else if (taskObject.selected && !updateDetails) {
+      } else if (taskObject.selected && !detailsValue) {
         taskObject.showDetails = false;
       }
     });
     setNewTasksArray(tasksArrayObjects);
-  }, [updateDetails]);
+  }, [detailsValue]);
 
   // Re-render Page.tsx Component
   let renderMainPage = (arg: number | boolean, mission: string) => {
@@ -56,8 +58,13 @@ export default function Home() {
     } else if (mission === "completed" && typeof arg === "number") {
       setUpdateCompleted(arg);
     } else if (mission === "details" && typeof arg === "boolean") {
-      setUpdateDetails(arg);
+      setDetailsValue(arg);
     } else if (mission === "options" && typeof arg === "boolean") {
+      if (!arg && selectAllRef.current?.innerHTML === "Deselect All") {
+        selectAllRef.current.innerHTML = "Select All";
+        setSelectAllValue(true);
+        tasksArrayObjects.map((taskObject) => (taskObject.selected = false));
+      }
       setOptionsValue(arg);
     }
   };
@@ -89,6 +96,26 @@ export default function Home() {
     setNewTasksArray(tasksArrayObjects);
   };
 
+  // Select All on click Function
+  let selectAllFunc = (e: React.MouseEvent) => {
+    if (e.currentTarget.innerHTML === "Select All") {
+      e.currentTarget.innerHTML = "Deselect All";
+      tasksArrayObjects.map((taskObject) => (taskObject.selected = true));
+      setSelectAllValue(!selectAllValue);
+      if (detailsValue)
+        tasksArrayObjects.map((taskObject) => (taskObject.showDetails = true));
+      if (!optionsValue) setOptionsValue(true);
+    } else {
+      e.currentTarget.innerHTML = "Select All";
+      tasksArrayObjects.map((taskObject) => {
+        taskObject.selected = false;
+        taskObject.showDetails = false;
+      });
+      setDetailsValue(false);
+      setSelectAllValue(!selectAllValue);
+    }
+  };
+
   return (
     <>
       {/* To Do List Title */}
@@ -114,7 +141,13 @@ export default function Home() {
 
       {/* Select All & Delete All */}
       <div className="grid grid-cols-2 w-6/12 m-auto mt-5 gap-20 pl-5 pr-5">
-        <button className="text-white col-span-1 bg-green-500 rounded-md">
+        <button
+          ref={selectAllRef}
+          className={`text-white col-span-1 rounded-md ${
+            selectAllValue ? "bg-green-500" : "bg-red-500"
+          }`}
+          onClick={selectAllFunc}
+        >
           Select All
         </button>
         <button
@@ -153,6 +186,7 @@ export default function Home() {
         optionsValue={optionsValue}
         renderMainPage={renderMainPage}
         tasks={tasksArrayObjects}
+        detailsValue={detailsValue}
       />
 
       {/* All Tasks */}
@@ -166,6 +200,7 @@ export default function Home() {
                   renderMainPage={renderMainPage}
                   taskObject={taskObject}
                   optionsValue={optionsValue}
+                  detailsValue={detailsValue}
                 />
               ))
             ) : (

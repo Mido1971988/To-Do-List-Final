@@ -1,25 +1,32 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
 
 export default function NewTask({
   taskObject,
   renderMainPage,
   optionsValue,
+  detailsValue,
 }: {
   taskObject: TaskObject;
   renderMainPage: (arg: number | boolean, mission: string) => void;
   optionsValue: boolean;
+  detailsValue: boolean;
 }) {
   let [doneValue, setDoneValue] = useState<boolean>(false);
-  let [selectValue, setSelectValue] = useState<boolean>(false);
+  let [selectValue, setSelectValue] = useState<boolean>(taskObject.selected);
   let [deleteValue, setDeleteValue] = useState<boolean>(taskObject.delete);
   let taskTextRef = useRef<HTMLDivElement>(null);
 
+  // to re-render if you clicked on Select All Button
+  useEffect(() => {
+    setSelectValue(taskObject.selected);
+  }, [taskObject.selected]);
+
   let handleClick = (e: React.BaseSyntheticEvent) => {
-    if (selectValue && e.target.children.length) {
+    if (taskObject.selected && e.target.children.length) {
       taskObject.selected = false;
       setSelectValue(false);
-    } else if (!selectValue && e.target.children.length) {
+    } else if (!taskObject.selected && e.target.children.length) {
       taskObject.selected = true;
       setSelectValue(true);
     } else if (e.target.innerHTML === "Pending") {
@@ -49,11 +56,12 @@ export default function NewTask({
   };
   return (
     <>
-      {taskObject.selected && taskObject.showDetails ? (
+      {taskObject.selected && taskObject.showDetails && detailsValue ? (
         <div
-          className={`grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:bg-green-600 before:top-[calc(50%-10px)] before:-left-[25px] ${
+          className={`grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:bg-green-600 before:top-[calc(50%-10px)] before:-left-[25px] before:pointer-events-auto ${
             optionsValue ? "before:absolute" : "before:hidden"
           }`}
+          onClick={handleClick}
         >
           <div className=" text-md font-bold font-sans col-span-4">
             ID : <span className=" font-medium">{taskObject.id}</span>
@@ -72,7 +80,7 @@ export default function NewTask({
       ) : (
         <div
           className={`grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative pointer-events-none before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:border-2  before:top-[calc(50%-10px)] before:-left-[25px] before:pointer-events-auto  ${
-            selectValue
+            selectValue || taskObject.selected
               ? "before:bg-green-600"
               : "before:border-black before:bg-white"
           } ${optionsValue ? "before:absolute" : "before:hidden"}`}
