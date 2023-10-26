@@ -12,7 +12,6 @@ export default function NewTask({
   optionsValue: boolean;
   detailsValue: boolean;
 }) {
-  let [doneValue, setDoneValue] = useState<boolean>(false);
   let [selectValue, setSelectValue] = useState<boolean>(taskObject.selected);
   let [deleteValue, setDeleteValue] = useState<boolean>(taskObject.delete);
   let taskTextRef = useRef<HTMLDivElement>(null);
@@ -30,15 +29,11 @@ export default function NewTask({
       taskObject.selected = true;
       setSelectValue(true);
     } else if (e.target.innerHTML === "Pending") {
-      e.target.innerHTML = "Done";
       taskObject.done = true;
-      setDoneValue(true);
-      renderMainPage(taskObject.id, "completed");
+      renderMainPage(Date.now(), "completed");
     } else if (e.target.innerHTML === "Done") {
-      e.target.innerHTML = "Pending";
       taskObject.done = false;
-      setDoneValue(false);
-      renderMainPage(taskObject.id / 2, "completed");
+      renderMainPage(Date.now(), "completed");
     } else if (e.target.innerHTML === "Edit") {
       let newText = prompt("Editing The Task...");
       if (newText) {
@@ -56,7 +51,7 @@ export default function NewTask({
   };
   return (
     <>
-      {taskObject.selected && taskObject.showDetails && detailsValue ? (
+      {taskObject.selected && detailsValue ? (
         <div
           className={`grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:bg-green-600 before:top-[calc(50%-10px)] before:-left-[25px] before:pointer-events-auto ${
             optionsValue ? "before:absolute" : "before:hidden"
@@ -91,19 +86,19 @@ export default function NewTask({
           </div>
           <button
             className={`${
-              doneValue
+              taskObject.done
                 ? "text-white col-span-1 bg-green-500 rounded-md pointer-events-auto"
                 : "text-white col-span-1 bg-slate-400 rounded-md pointer-events-auto"
             }`}
           >
-            Pending
+            {taskObject.done ? "Done" : "Pending"}
           </button>
           <button
             className="text-white text-center leading-5 bg-red-500 h-5 w-5 rounded-full pointer-events-auto absolute top-[calc(50%-10px)] -right-[25px] font-sans font-bold"
             onClick={() => {
               taskObject.delete = true;
               setDeleteValue(true);
-              renderMainPage(taskObject.id, "deleteTask");
+              renderMainPage(Date.now(), "deleteTask");
             }}
           >
             X

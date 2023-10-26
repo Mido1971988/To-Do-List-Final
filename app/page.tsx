@@ -22,7 +22,7 @@ export default function Home() {
     let filteredTasksArrayElements = tasksArrayObjects.filter((taskObject) => {
       if (taskObject.delete) {
         taskObject.done = false;
-        setUpdateCompleted(taskObject.id / 3);
+        setUpdateCompleted(Date.now());
         return false;
       } else {
         return true;
@@ -38,18 +38,6 @@ export default function Home() {
     });
     setcompletedArray(filteredCompletedTasksArray);
   }, [updateCompleted]);
-
-  // to Show Details
-  useEffect(() => {
-    tasksArrayObjects.map((taskObject) => {
-      if (taskObject.selected && detailsValue) {
-        taskObject.showDetails = true;
-      } else if (taskObject.selected && !detailsValue) {
-        taskObject.showDetails = false;
-      }
-    });
-    setNewTasksArray(tasksArrayObjects);
-  }, [detailsValue]);
 
   // Re-render Page.tsx Component
   let renderMainPage = (arg: number | boolean, mission: string) => {
@@ -89,7 +77,6 @@ export default function Home() {
       edited: false,
       editedTime: "",
       selected: false,
-      showDetails: false,
     };
     inputRef.current?.value ? (inputRef.current.value = "") : "";
     tasksArrayObjects.unshift(taskObject);
@@ -102,14 +89,11 @@ export default function Home() {
       e.currentTarget.innerHTML = "Deselect All";
       tasksArrayObjects.map((taskObject) => (taskObject.selected = true));
       setSelectAllValue(!selectAllValue);
-      if (detailsValue)
-        tasksArrayObjects.map((taskObject) => (taskObject.showDetails = true));
       if (!optionsValue) setOptionsValue(true);
     } else {
       e.currentTarget.innerHTML = "Select All";
       tasksArrayObjects.map((taskObject) => {
         taskObject.selected = false;
-        taskObject.showDetails = false;
       });
       setDetailsValue(false);
       setSelectAllValue(!selectAllValue);
