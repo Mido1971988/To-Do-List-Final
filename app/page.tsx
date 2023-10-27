@@ -85,6 +85,7 @@ export default function Home() {
 
   // Select All on click Function
   let selectAllFunc = (e: React.MouseEvent) => {
+    if (!tasksArrayObjects.length) return;
     if (e.currentTarget.innerHTML === "Select All") {
       e.currentTarget.innerHTML = "Deselect All";
       tasksArrayObjects.map((taskObject) => (taskObject.selected = true));
@@ -137,6 +138,7 @@ export default function Home() {
         <button
           className="text-white col-span-1 bg-red-500 rounded-md"
           onClick={() => {
+            if (!tasksArrayObjects.length) return;
             if (confirm("Are You Sure Delete All Tasks ?")) {
               setcompletedArray([]);
               setNewTasksArray([]);
@@ -171,6 +173,7 @@ export default function Home() {
         renderMainPage={renderMainPage}
         tasks={tasksArrayObjects}
         detailsValue={detailsValue}
+        setNewTasksArray={setNewTasksArray}
       />
 
       {/* All Tasks */}

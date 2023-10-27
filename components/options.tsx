@@ -6,12 +6,16 @@ export default function Options({
   renderMainPage,
   tasks,
   detailsValue,
+  setNewTasksArray,
 }: {
   optionsValue: boolean;
   renderMainPage: (arg: number | boolean, fromComp: string) => void;
   tasks: TaskObject[];
   detailsValue: boolean;
+  setNewTasksArray: React.Dispatch<React.SetStateAction<TaskObject[]>>;
 }) {
+  let [completeButton, setCompleteButton] = useState(true);
+
   // to Check no. of selected tasks
   let selectedCheck = () => {
     let selectedTasks = tasks.filter((task) => {
@@ -21,31 +25,53 @@ export default function Options({
     return selectedTasks;
   };
 
-  let [completeButton, setCompleteButton] = useState(true);
+  // swap Function
+  let swapFunc = () => {
+    let selectedTasks = selectedCheck();
+    if (selectedTasks.length === 2) {
+      let swapIndex: number[] = [];
+      tasks.map((task, indx) => {
+        if (task.selected) swapIndex.push(indx);
+      });
+      [tasks[swapIndex[0]], tasks[swapIndex[1]]] = [
+        tasks[swapIndex[1]],
+        tasks[swapIndex[0]],
+      ];
+      setNewTasksArray(tasks);
+    }
+  };
+
+  // complete Function
+  let completeFunc = () => {
+    let selectedTasks = selectedCheck();
+    if (selectedTasks.length) {
+      selectedTasks.map((selectedTask) => {
+        if (completeButton) {
+          selectedTask.done = true;
+        } else {
+          selectedTask.done = false;
+        }
+      });
+      setCompleteButton(!completeButton);
+      renderMainPage(Date.now(), "completed");
+    }
+  };
 
   return (
     <>
       {optionsValue ? (
         <div className="grid grid-cols-5 m-auto w-6/12 gap-1 mt-5">
-          <button className=" text-black bg-green-500 rounded-md">Swap</button>
+          <button
+            className=" text-black bg-green-500 rounded-md"
+            onClick={swapFunc}
+          >
+            Swap
+          </button>
           <button
             className={`text-black rounded-md ${
               completeButton ? "bg-green-500" : "bg-red-500"
             }`}
-            onClick={() => {
-              let selectedTasks = selectedCheck();
-              if (selectedTasks.length) {
-                selectedTasks.map((selectedTask) => {
-                  if (completeButton) {
-                    selectedTask.done = true;
-                  } else {
-                    selectedTask.done = false;
-                  }
-                });
-                setCompleteButton(!completeButton);
-                renderMainPage(Date.now(), "completed");
-              }
-            }}
+            onClick={completeFunc}
           >
             {completeButton ? "Complete" : "unComplete"}
           </button>
