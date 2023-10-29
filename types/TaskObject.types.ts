@@ -7,4 +7,6 @@ export type TaskObject = {
   edited: boolean;
   editedTime: string | undefined;
   selected: boolean;
+  up: boolean;
+  down: boolean;
 };

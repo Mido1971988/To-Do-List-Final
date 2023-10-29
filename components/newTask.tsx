@@ -6,14 +6,15 @@ export default function NewTask({
   renderMainPage,
   optionsValue,
   detailsValue,
+  moveValue,
 }: {
   taskObject: TaskObject;
   renderMainPage: (arg: number | boolean, mission: string) => void;
   optionsValue: boolean;
   detailsValue: boolean;
+  moveValue: boolean;
 }) {
   let [selectValue, setSelectValue] = useState<boolean>(taskObject.selected);
-  let [deleteValue, setDeleteValue] = useState<boolean>(taskObject.delete);
   let taskTextRef = useRef<HTMLDivElement>(null);
 
   // to re-render if you clicked on Select All Button
@@ -22,10 +23,13 @@ export default function NewTask({
   }, [taskObject.selected]);
 
   let handleClick = (e: React.BaseSyntheticEvent) => {
-    if (taskObject.selected && e.target.children.length) {
+    if (taskObject.selected && e.target.classList.contains("my-circle")) {
       taskObject.selected = false;
       setSelectValue(false);
-    } else if (!taskObject.selected && e.target.children.length) {
+    } else if (
+      !taskObject.selected &&
+      e.target.classList.contains("my-circle")
+    ) {
       taskObject.selected = true;
       setSelectValue(true);
     } else if (e.target.innerHTML === "Pending") {
@@ -47,17 +51,26 @@ export default function NewTask({
             ?.join("");
         }
       }
+    } else if (moveValue && e.target.classList.contains("up")) {
+      taskObject.up = true;
+      renderMainPage(Date.now(), "moveUp");
+    } else if (moveValue && e.target.classList.contains("down")) {
+      taskObject.down = true;
+      renderMainPage(Date.now(), "moveDown");
     }
   };
   return (
     <>
       {taskObject.selected && detailsValue ? (
         <div
-          className={`grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:bg-green-600 before:top-[calc(50%-10px)] before:-left-[25px] before:pointer-events-auto ${
-            optionsValue ? "before:absolute" : "before:hidden"
-          }`}
+          className="grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative pointer-events-none"
           onClick={handleClick}
         >
+          <div
+            className={`my-circle ${
+              optionsValue ? "absolute" : "hidden"
+            } rounded-full border-black border-2 w-5 h-5 top-[calc(50%-10px)] -left-[25px] pointer-events-auto bg-green-600 `}
+          ></div>
           <div className=" text-md font-bold font-sans col-span-4">
             ID : <span className=" font-medium">{taskObject.id}</span>
             <br />
@@ -65,7 +78,8 @@ export default function NewTask({
             <br />
             {taskObject.edited ? (
               <span className=" font-medium">
-                Edited at : {taskObject.editedTime}
+                <span className="font-bold font-sans">Edited at :</span>{" "}
+                {taskObject.editedTime}
               </span>
             ) : (
               ""
@@ -74,14 +88,29 @@ export default function NewTask({
         </div>
       ) : (
         <div
-          className={`grid grid-cols-4 gap-4 bg-white p-2 rounded-md w-full relative pointer-events-none before:content-[''] before:absolute  before:h-5 before:w-5 before:rounded-full before:border-2  before:top-[calc(50%-10px)] before:-left-[25px] before:pointer-events-auto  ${
-            selectValue || taskObject.selected
-              ? "before:bg-green-600"
-              : "before:border-black before:bg-white"
-          } ${optionsValue ? "before:absolute" : "before:hidden"}`}
+          className="grid grid-cols-5 gap-4 bg-white p-2 rounded-md w-full relative pointer-events-none"
           onClick={handleClick}
         >
-          <div ref={taskTextRef} className=" text-black col-span-2">
+          <div
+            className={`up ${
+              moveValue ? "absolute" : "hidden"
+            } w-0 h-0 border-x-[12px] border-x-transparent border-b-[12px] border-b-green-500 top-0 -left-[24px] pointer-events-auto`}
+          ></div>
+          <div
+            className={`down ${
+              moveValue ? "absolute" : "hidden"
+            } w-0 h-0 border-x-[12px] border-x-transparent border-t-[12px] border-t-green-500 bottom-0 -left-[24px] pointer-events-auto `}
+          ></div>
+          <div
+            className={`my-circle ${
+              optionsValue ? "absolute" : "hidden"
+            } rounded-full border-black  border-2 w-5 h-5 top-[calc(50%-10px)] -left-[25px] pointer-events-auto ${
+              selectValue || taskObject.selected
+                ? "bg-green-600"
+                : "border-black bg-white"
+            }`}
+          ></div>
+          <div ref={taskTextRef} className=" text-black col-span-3">
             {taskObject.text}
           </div>
           <button
@@ -97,7 +126,6 @@ export default function NewTask({
             className="text-white text-center leading-5 bg-red-500 h-5 w-5 rounded-full pointer-events-auto absolute top-[calc(50%-10px)] -right-[25px] font-sans font-bold"
             onClick={() => {
               taskObject.delete = true;
-              setDeleteValue(true);
               renderMainPage(Date.now(), "deleteTask");
             }}
           >

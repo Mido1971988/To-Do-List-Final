@@ -6,12 +6,14 @@ export default function Options({
   renderMainPage,
   tasks,
   detailsValue,
+  moveValue,
   setNewTasksArray,
 }: {
   optionsValue: boolean;
   renderMainPage: (arg: number | boolean, fromComp: string) => void;
   tasks: TaskObject[];
   detailsValue: boolean;
+  moveValue: boolean;
   setNewTasksArray: React.Dispatch<React.SetStateAction<TaskObject[]>>;
 }) {
   let [completeButton, setCompleteButton] = useState(true);
@@ -107,9 +109,21 @@ export default function Options({
         </div>
       ) : (
         <div className="grid grid-cols-2 m-auto w-6/12 gap-60 mt-5">
-          <button className=" text-white justify-items-start  bg-green-500 rounded-md">
-            Move
-          </button>
+          {moveValue ? (
+            <button
+              className=" text-white justify-items-start  bg-red-500 rounded-md"
+              onClick={() => renderMainPage(false, "move")}
+            >
+              Moving...
+            </button>
+          ) : (
+            <button
+              className=" text-white justify-items-start  bg-green-500 rounded-md"
+              onClick={() => renderMainPage(true, "move")}
+            >
+              Move
+            </button>
+          )}
           <button
             className=" text-white justify-items-end bg-green-500 rounded-md"
             onClick={() => renderMainPage(true, "options")}

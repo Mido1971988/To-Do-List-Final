@@ -9,6 +9,7 @@ export default function Home() {
   let [updateDeleted, setUpdateDeleted] = useState(0);
   let [updateCompleted, setUpdateCompleted] = useState(0);
   let [optionsValue, setOptionsValue] = useState(false);
+  let [moveValue, setMoveValue] = useState(false);
   let [selectAllValue, setSelectAllValue] = useState(true);
   let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
   let [completedArray, setcompletedArray] = useState<TaskObject[]>([]);
@@ -54,6 +55,32 @@ export default function Home() {
         tasksArrayObjects.map((taskObject) => (taskObject.selected = false));
       }
       setOptionsValue(arg);
+    } else if (mission === "move" && typeof arg === "boolean") {
+      setMoveValue(arg);
+    } else if (mission === "moveUp" && typeof arg === "number") {
+      tasksArrayObjects.map((task, indx) => {
+        if (indx === 0) task.up = false;
+        if (task.up) {
+          [tasksArrayObjects[indx], tasksArrayObjects[indx - 1]] = [
+            tasksArrayObjects[indx - 1],
+            tasksArrayObjects[indx],
+          ];
+          task.up = false;
+        }
+        setNewTasksArray([...tasksArrayObjects]);
+      });
+    } else if (mission === "moveDown" && typeof arg === "number") {
+      tasksArrayObjects.map((task, indx) => {
+        if (indx === tasksArrayObjects.length - 1) task.down = false;
+        if (task.down) {
+          [tasksArrayObjects[indx], tasksArrayObjects[indx + 1]] = [
+            tasksArrayObjects[indx + 1],
+            tasksArrayObjects[indx],
+          ];
+          task.down = false;
+        }
+        setNewTasksArray([...tasksArrayObjects]);
+      });
     }
   };
   // Input function
@@ -77,6 +104,8 @@ export default function Home() {
       edited: false,
       editedTime: "",
       selected: false,
+      up: false,
+      down: false,
     };
     inputRef.current?.value ? (inputRef.current.value = "") : "";
     tasksArrayObjects.unshift(taskObject);
@@ -174,6 +203,7 @@ export default function Home() {
         tasks={tasksArrayObjects}
         detailsValue={detailsValue}
         setNewTasksArray={setNewTasksArray}
+        moveValue={moveValue}
       />
 
       {/* All Tasks */}
@@ -188,6 +218,7 @@ export default function Home() {
                   taskObject={taskObject}
                   optionsValue={optionsValue}
                   detailsValue={detailsValue}
+                  moveValue={moveValue}
                 />
               ))
             ) : (
