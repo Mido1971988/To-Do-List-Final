@@ -6,16 +6,26 @@ import { useState, useRef, useEffect } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
 
 export default function Home() {
-  let [updateDeleted, setUpdateDeleted] = useState(0);
-  let [updateCompleted, setUpdateCompleted] = useState(0);
+  let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
+
+  // Hooks for options.tsx
   let [optionsValue, setOptionsValue] = useState(false);
   let [moveValue, setMoveValue] = useState(false);
-  let [selectAllValue, setSelectAllValue] = useState(true);
-  let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
-  let [completedArray, setcompletedArray] = useState<TaskObject[]>([]);
   let [detailsValue, setDetailsValue] = useState(false);
+
+  // Hook of Select All Button
+  let [selectAllValue, setSelectAllValue] = useState(true);
+
+  // Hook to Delete Tasks
+  let [updateDeleted, setUpdateDeleted] = useState(0);
+
+  // Hook for no. of Completed
+  let [completedArray, setcompletedArray] = useState<TaskObject[]>([]);
+
+  // refs
   let inputRef = useRef<HTMLInputElement>(null);
   let selectAllRef = useRef<HTMLButtonElement>(null);
+
   let tasksArrayObjects = [...newTasksArray];
 
   // Delete task
@@ -23,7 +33,8 @@ export default function Home() {
     let filteredTasksArrayElements = tasksArrayObjects.filter((taskObject) => {
       if (taskObject.delete) {
         taskObject.done = false;
-        setUpdateCompleted(Date.now());
+        let filteredCompletedTasksArray = noOfCompleted();
+        setcompletedArray(filteredCompletedTasksArray);
         return false;
       } else {
         return true;
@@ -32,20 +43,22 @@ export default function Home() {
     setNewTasksArray(filteredTasksArrayElements);
   }, [updateDeleted]);
 
-  // Count no. of Completed Tasks
-  useEffect(() => {
+  // check no. of completed tasks
+  let noOfCompleted = () => {
     let filteredCompletedTasksArray = tasksArrayObjects.filter((taskObject) => {
       if (taskObject.done) return true;
     });
-    setcompletedArray(filteredCompletedTasksArray);
-  }, [updateCompleted]);
+    return filteredCompletedTasksArray;
+  };
 
   // Re-render Page.tsx Component
   let renderMainPage = (arg: number | boolean, mission: string) => {
     if (mission === "deleteTask" && typeof arg === "number") {
       setUpdateDeleted(arg);
     } else if (mission === "completed" && typeof arg === "number") {
-      setUpdateCompleted(arg);
+      // setUpdateCompleted(arg);
+      let filteredCompletedTasksArray = noOfCompleted();
+      setcompletedArray(filteredCompletedTasksArray);
     } else if (mission === "details" && typeof arg === "boolean") {
       setDetailsValue(arg);
     } else if (mission === "options" && typeof arg === "boolean") {
@@ -83,6 +96,7 @@ export default function Home() {
       });
     }
   };
+
   // Input function
   let insertInput = () => {
     if (inputRef.current?.value === "") {
