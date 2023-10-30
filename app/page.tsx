@@ -4,6 +4,7 @@ import NewTask from "@/components/newTask";
 import Options from "@/components/options";
 import { useState, useRef, useEffect } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
+import initialTasks from "@/public/data/initialTasks";
 
 export default function Home() {
   let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
@@ -26,7 +27,29 @@ export default function Home() {
   let inputRef = useRef<HTMLInputElement>(null);
   let selectAllRef = useRef<HTMLButtonElement>(null);
 
-  let tasksArrayObjects = [...newTasksArray];
+  let tasksArrayObjects: TaskObject[] = [...newTasksArray];
+
+  // to add inital Tasks When Component mounts
+  useEffect(() => {
+    // [1] import tsx file
+    tasksArrayObjects = [...initialTasks];
+
+    // [2] use fetch local json File from Public directory
+    // fetch("data/initialTasksJson.json")
+    //   .then((res) => res.json())
+    //   .then(setNewTasksArray);
+
+    // [3] use fetch json File from server
+    // fetch("http://localhost:3500")
+    //   .then((res) => {
+    //     if (!res.ok) {
+    //       throw new Error("Failed to Fetch");
+    //     }
+    //     return res.json();
+    //   })
+    //   .then(setNewTasksArray)
+    //   .catch((err) => console.log("Server not Running...."));
+  }, []);
 
   // Delete task
   useEffect(() => {
