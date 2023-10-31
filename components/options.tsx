@@ -8,6 +8,8 @@ export default function Options({
   detailsValue,
   moveValue,
   setNewTasksArray,
+  setcompletedArray,
+  noOfCompleted,
 }: {
   optionsValue: boolean;
   renderMainPage: (arg: number | boolean, fromComp: string) => void;
@@ -15,6 +17,8 @@ export default function Options({
   detailsValue: boolean;
   moveValue: boolean;
   setNewTasksArray: React.Dispatch<React.SetStateAction<TaskObject[]>>;
+  setcompletedArray: React.Dispatch<React.SetStateAction<TaskObject[]>>;
+  noOfCompleted: (tasks: TaskObject[]) => TaskObject[];
 }) {
   let [completeButton, setCompleteButton] = useState(true);
 
@@ -57,6 +61,42 @@ export default function Options({
       setCompleteButton(!completeButton);
       renderMainPage(Date.now(), "completed");
     }
+  };
+
+  // Save Button Function
+  let handleSaveClick = () => {
+    fetch("http://localhost:3500", {
+      method: "post",
+      mode: "cors",
+      headers: {
+        Accept: "text/plain",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(tasks),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed");
+        return res.text();
+      })
+      .then(console.log)
+      .catch((err) => console.log(err));
+  };
+
+  // load Button Function
+  let handelLoadClick = () => {
+    fetch("http://localhost:3500")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to Fetch");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        setNewTasksArray(res);
+        let filteredCompletedTasksArray = noOfCompleted(res);
+        setcompletedArray(filteredCompletedTasksArray);
+      })
+      .catch((err) => console.log(err, "Server not Running...."));
   };
 
   return (
@@ -108,24 +148,36 @@ export default function Options({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 m-auto w-6/12 gap-60 mt-5">
+        <div className="grid grid-cols-4 m-auto w-6/12 gap-10 mt-5">
           {moveValue ? (
             <button
-              className=" text-white justify-items-start  bg-red-500 rounded-md"
+              className=" text-white col-span-1 bg-red-500 rounded-md"
               onClick={() => renderMainPage(false, "move")}
             >
               Moving...
             </button>
           ) : (
             <button
-              className=" text-white justify-items-start  bg-green-500 rounded-md"
+              className=" text-white col-span-1  bg-green-500 rounded-md"
               onClick={() => renderMainPage(true, "move")}
             >
               Move
             </button>
           )}
           <button
-            className=" text-white justify-items-end bg-green-500 rounded-md"
+            className=" text-white col-span-1 bg-green-500 rounded-md"
+            onClick={handleSaveClick}
+          >
+            Save
+          </button>
+          <button
+            className=" text-white col-span-1 bg-green-500 rounded-md"
+            onClick={handelLoadClick}
+          >
+            Load
+          </button>
+          <button
+            className=" text-white col-span-1 bg-green-500 rounded-md"
             onClick={() => renderMainPage(true, "options")}
           >
             Select

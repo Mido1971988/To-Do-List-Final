@@ -32,7 +32,7 @@ export default function Home() {
   // to add inital Tasks When Component mounts
   useEffect(() => {
     // [1] import tsx file
-    tasksArrayObjects = [...initialTasks];
+    // tasksArrayObjects = [...initialTasks];
 
     // [2] use fetch local json File from Public directory
     // fetch("data/initialTasksJson.json")
@@ -40,15 +40,19 @@ export default function Home() {
     //   .then(setNewTasksArray);
 
     // [3] use fetch json File from server
-    // fetch("http://localhost:3500")
-    //   .then((res) => {
-    //     if (!res.ok) {
-    //       throw new Error("Failed to Fetch");
-    //     }
-    //     return res.json();
-    //   })
-    //   .then(setNewTasksArray)
-    //   .catch((err) => console.log("Server not Running...."));
+    fetch("http://localhost:3500")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to Fetch");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        setNewTasksArray(res);
+        let filteredCompletedTasksArray = noOfCompleted(res);
+        setcompletedArray(filteredCompletedTasksArray);
+      })
+      .catch((err) => console.log("Server not Running...."));
   }, []);
 
   // Delete task
@@ -56,7 +60,7 @@ export default function Home() {
     let filteredTasksArrayElements = tasksArrayObjects.filter((taskObject) => {
       if (taskObject.delete) {
         taskObject.done = false;
-        let filteredCompletedTasksArray = noOfCompleted();
+        let filteredCompletedTasksArray = noOfCompleted(newTasksArray);
         setcompletedArray(filteredCompletedTasksArray);
         return false;
       } else {
@@ -67,8 +71,8 @@ export default function Home() {
   }, [updateDeleted]);
 
   // check no. of completed tasks
-  let noOfCompleted = () => {
-    let filteredCompletedTasksArray = tasksArrayObjects.filter((taskObject) => {
+  let noOfCompleted = (tasks: TaskObject[]) => {
+    let filteredCompletedTasksArray = tasks.filter((taskObject) => {
       if (taskObject.done) return true;
     });
     return filteredCompletedTasksArray;
@@ -79,8 +83,7 @@ export default function Home() {
     if (mission === "deleteTask" && typeof arg === "number") {
       setUpdateDeleted(arg);
     } else if (mission === "completed" && typeof arg === "number") {
-      // setUpdateCompleted(arg);
-      let filteredCompletedTasksArray = noOfCompleted();
+      let filteredCompletedTasksArray = noOfCompleted(newTasksArray);
       setcompletedArray(filteredCompletedTasksArray);
     } else if (mission === "details" && typeof arg === "boolean") {
       setDetailsValue(arg);
@@ -241,6 +244,8 @@ export default function Home() {
         detailsValue={detailsValue}
         setNewTasksArray={setNewTasksArray}
         moveValue={moveValue}
+        setcompletedArray={setcompletedArray}
+        noOfCompleted={noOfCompleted}
       />
 
       {/* All Tasks */}
