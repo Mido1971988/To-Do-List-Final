@@ -23,6 +23,9 @@ export default function Home() {
   // Hook for no. of Completed
   let [completedArray, setcompletedArray] = useState<TaskObject[]>([]);
 
+  // Hook for Loading from server
+  let [loading, setLoading] = useState(0);
+
   // refs
   let inputRef = useRef<HTMLInputElement>(null);
   let selectAllRef = useRef<HTMLButtonElement>(null);
@@ -53,7 +56,7 @@ export default function Home() {
         setcompletedArray(filteredCompletedTasksArray);
       })
       .catch((err) => console.log("Server not Running...."));
-  }, []);
+  }, [loading]);
 
   // Delete task
   useEffect(() => {
@@ -120,6 +123,8 @@ export default function Home() {
         }
         setNewTasksArray([...tasksArrayObjects]);
       });
+    } else if (mission === "loading" && typeof arg === "number") {
+      setLoading(arg);
     }
   };
 
@@ -244,8 +249,6 @@ export default function Home() {
         detailsValue={detailsValue}
         setNewTasksArray={setNewTasksArray}
         moveValue={moveValue}
-        setcompletedArray={setcompletedArray}
-        noOfCompleted={noOfCompleted}
       />
 
       {/* All Tasks */}

@@ -8,8 +8,6 @@ export default function Options({
   detailsValue,
   moveValue,
   setNewTasksArray,
-  setcompletedArray,
-  noOfCompleted,
 }: {
   optionsValue: boolean;
   renderMainPage: (arg: number | boolean, fromComp: string) => void;
@@ -17,8 +15,6 @@ export default function Options({
   detailsValue: boolean;
   moveValue: boolean;
   setNewTasksArray: React.Dispatch<React.SetStateAction<TaskObject[]>>;
-  setcompletedArray: React.Dispatch<React.SetStateAction<TaskObject[]>>;
-  noOfCompleted: (tasks: TaskObject[]) => TaskObject[];
 }) {
   let [completeButton, setCompleteButton] = useState(true);
 
@@ -80,23 +76,6 @@ export default function Options({
       })
       .then(console.log)
       .catch((err) => console.log(err));
-  };
-
-  // load Button Function
-  let handelLoadClick = () => {
-    fetch("http://localhost:3500")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to Fetch");
-        }
-        return res.json();
-      })
-      .then((res) => {
-        setNewTasksArray(res);
-        let filteredCompletedTasksArray = noOfCompleted(res);
-        setcompletedArray(filteredCompletedTasksArray);
-      })
-      .catch((err) => console.log(err, "Server not Running...."));
   };
 
   return (
@@ -172,7 +151,7 @@ export default function Options({
           </button>
           <button
             className=" text-white col-span-1 bg-green-500 rounded-md"
-            onClick={handelLoadClick}
+            onClick={() => renderMainPage(Date.now(), "loading")}
           >
             Load
           </button>
