@@ -2,6 +2,7 @@
 
 import NewTask from "@/components/newTask";
 import Options from "@/components/options";
+import SigninButton from "@/components/signinButton";
 import { useState, useRef, useEffect } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
 import initialTasks from "@/public/data/initialTasks";
@@ -33,30 +34,30 @@ export default function Home() {
   let tasksArrayObjects: TaskObject[] = [...newTasksArray];
 
   // to add inital Tasks When Component mounts
-  useEffect(() => {
-    // [1] import tsx file
-    // tasksArrayObjects = [...initialTasks];
+  // useEffect(() => {
+  //   // [1] import tsx file
+  //   // tasksArrayObjects = [...initialTasks];
 
-    // [2] use fetch local json File from Public directory
-    // fetch("data/initialTasksJson.json")
-    //   .then((res) => res.json())
-    //   .then(setNewTasksArray);
+  //   // [2] use fetch local json File from Public directory
+  //   // fetch("data/initialTasksJson.json")
+  //   //   .then((res) => res.json())
+  //   //   .then(setNewTasksArray);
 
-    // [3] use fetch json File from server
-    fetch("http://localhost:3500")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to Fetch");
-        }
-        return res.json();
-      })
-      .then((res) => {
-        setNewTasksArray(res);
-        let filteredCompletedTasksArray = noOfCompleted(res);
-        setcompletedArray(filteredCompletedTasksArray);
-      })
-      .catch((err) => console.log("Server not Running...."));
-  }, [loading]);
+  //   // [3] use fetch json File from server
+  //   fetch("http://localhost:3500")
+  //     .then((res) => {
+  //       if (!res.ok) {
+  //         throw new Error("Failed to Fetch");
+  //       }
+  //       return res.json();
+  //     })
+  //     .then((res) => {
+  //       setNewTasksArray(res[0].Mido1_88);
+  //       let filteredCompletedTasksArray = noOfCompleted(res[0].Mido1_88);
+  //       setcompletedArray(filteredCompletedTasksArray);
+  //     })
+  //     .catch((err) => console.log("Server not Running...."));
+  // }, [loading]);
 
   // Delete task
   useEffect(() => {
@@ -181,6 +182,9 @@ export default function Home() {
       <h1 className=" text-red-600 text-[40px] font-black font-serif text-center mt-5">
         To Do List
       </h1>
+
+      {/* Sign In Button */}
+      <SigninButton></SigninButton>
 
       {/* no. of Tasks and no. of Completed */}
       <div className="grid grid-cols-2 w-6/12 m-auto mt-5">
