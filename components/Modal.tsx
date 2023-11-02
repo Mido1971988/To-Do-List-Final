@@ -1,7 +1,6 @@
 "use client";
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
-import { redirect } from "next/navigation";
 interface IProps {
   show?: boolean;
 

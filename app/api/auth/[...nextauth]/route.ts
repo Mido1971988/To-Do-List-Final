@@ -3,6 +3,7 @@ import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const handler = NextAuth({
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -21,24 +22,20 @@ const handler = NextAuth({
       },
 
       async authorize(credentials) {
-        let found = false;
         let user = { id: "", name: "", password: "" };
         const response = await fetch("http://localhost:3500/listOfUsers");
         const users = await response.json();
-        users.map(
-          (userServer: { id: string; name: string; password: string }) => {
-            if (found) return;
+        user = users.filter(
+          (oneUser: { id: string; name: string; password: string }) => {
             if (
-              credentials?.username === userServer.name &&
-              credentials?.password === userServer.password
+              credentials?.username === oneUser.name &&
+              credentials?.password === oneUser.password
             ) {
-              found = true;
-              user = userServer;
-              return;
+              return true;
             }
           }
-        );
-        if (found) {
+        )[0];
+        if (user.name !== "") {
           return user;
         } else {
           return null;

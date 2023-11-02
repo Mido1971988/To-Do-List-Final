@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef } from "react";
 import InputBox from "./InputBox";
-import { Button } from "./Button";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -51,9 +50,12 @@ const Login = (props: Props) => {
           onChange={(e) => (pass.current = e.target.value)}
         />
         <div className="flex items-center justify-center mt-2 gap-2">
-          <Button type="submit" className="w-28">
+          <button
+            type="submit"
+            className="w-28 border border-green-600 text-center py-2 rounded-md text-white-600 transition hover:bg-green-600 hover:text-white hover:border-transparent active:scale-95"
+          >
             Sign In
-          </Button>
+          </button>
           <Link
             href={props.callbackUrl ?? "/"}
             className="w-28 border border-red-600 text-center py-2 rounded-md text-red-600 transition hover:bg-red-600 hover:text-white hover:border-transparent active:scale-95"

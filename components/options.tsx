@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
+import { useSession } from "next-auth/react";
 
 export default function Options({
   optionsValue,
@@ -17,6 +18,7 @@ export default function Options({
   setNewTasksArray: React.Dispatch<React.SetStateAction<TaskObject[]>>;
 }) {
   let [completeButton, setCompleteButton] = useState(true);
+  let { data: session, status } = useSession();
 
   // to Check no. of selected tasks
   let selectedCheck = () => {
@@ -61,21 +63,25 @@ export default function Options({
 
   // Save Button Function
   let handleSaveClick = () => {
-    fetch("http://localhost:3500", {
-      method: "post",
-      mode: "cors",
-      headers: {
-        Accept: "text/plain",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(tasks),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed");
-        return res.text();
+    if (status === "authenticated" && session && session.user) {
+      let userName = session?.user.name;
+      let reqBody = [userName, tasks];
+      fetch("http://localhost:3500/tasks", {
+        method: "post",
+        mode: "cors",
+        headers: {
+          Accept: "text/plain",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
       })
-      .then(console.log)
-      .catch((err) => console.log(err));
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed");
+          return res.text();
+        })
+        .then(console.log)
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
