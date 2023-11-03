@@ -13,13 +13,14 @@ type Props = {
 
 const Login = (props: Props) => {
   const router = useRouter();
-  const userName = useRef("");
-  const pass = useRef("");
+  let userName = "";
+  let pass = "";
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await signIn("credentials", {
-      username: userName.current,
-      password: pass.current,
+      username: userName,
+      password: pass,
       redirect: false,
     });
 
@@ -41,13 +42,13 @@ const Login = (props: Props) => {
         <InputBox
           name="username"
           labelText="User Name"
-          onChange={(e) => (userName.current = e.target.value)}
+          onChange={(e) => (userName = e.target.value)}
         />
         <InputBox
           name="password"
           type="password"
           labelText="Password"
-          onChange={(e) => (pass.current = e.target.value)}
+          onChange={(e) => (pass = e.target.value)}
         />
         <div className="flex items-center justify-center mt-2 gap-2">
           <button

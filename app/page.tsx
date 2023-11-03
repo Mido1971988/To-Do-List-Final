@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
 import initialTasks from "@/public/data/initialTasks";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Home() {
   let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
@@ -209,8 +210,22 @@ export default function Home() {
         To Do List
       </h1>
 
-      {/* Sign In Button */}
-      <SigninButton></SigninButton>
+      {/* Sign In and Sign Up Buttons */}
+      {/* <SigninButton></SigninButton> */}
+      <div className="flex justify-center gap-5">
+        <SigninButton></SigninButton>
+        {session && session.user ? (
+          ""
+        ) : (
+          <Link
+            href={"/signUp"}
+            className="text-red-600 text-6 font-black font-serif text-center mt-5"
+            scroll={false}
+          >
+            Sign Up
+          </Link>
+        )}
+      </div>
 
       {/* no. of Tasks and no. of Completed */}
       <div className="grid grid-cols-2 w-6/12 m-auto mt-5">

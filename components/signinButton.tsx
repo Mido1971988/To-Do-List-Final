@@ -19,7 +19,7 @@ const SigninButton = () => {
   return (
     <Link
       href={"/signIn"}
-      className="text-green-600 text-6 font-black font-serif text-center mt-5 block"
+      className="text-green-600 text-6 font-black font-serif text-center mt-5"
       scroll={false}
     >
       Sign In
