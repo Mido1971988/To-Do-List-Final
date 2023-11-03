@@ -7,6 +7,7 @@ type Props = {
 };
 
 const SignInPage = (props: Props) => {
+  console.log(props);
   return (
     <Modal>
       <Login

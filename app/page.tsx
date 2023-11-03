@@ -73,16 +73,26 @@ export default function Home() {
           return res.json();
         })
         .then((res) => {
-          let foundTasks = res.filter(
-            (task: { [key: string]: TaskObject[] }) => {
-              if (task[session?.user?.name as string]) return true;
+          if (session && session.user && session.user.name) {
+            let username = session?.user?.name;
+            let foundTasks = res.filter(
+              (task: { [key: string]: TaskObject[] }) => {
+                if (task[username]) return true;
+              }
+            );
+            if (foundTasks.length) {
+              setNewTasksArray(foundTasks[0][username]);
+              let filteredCompletedTasksArray = noOfCompleted(
+                foundTasks[0][username]
+              );
+              setcompletedArray(filteredCompletedTasksArray);
             }
-          )[0][session?.user?.name as string];
-          setNewTasksArray(foundTasks);
-          let filteredCompletedTasksArray = noOfCompleted(foundTasks);
-          setcompletedArray(filteredCompletedTasksArray);
+          }
         })
         .catch((err) => console.log("Server not Running...."));
+    } else {
+      setNewTasksArray([]);
+      setcompletedArray([]);
     }
   }, [status]);
 
@@ -273,6 +283,7 @@ export default function Home() {
       {/* Write your Task */}
       <div className=" grid grid-cols-3 gap-4 w-6/12 m-auto mt-5 p-5 bg-slate-100 rounded-md">
         <input
+          id="inputTask"
           type="text"
           placeholder="Write your Task!"
           className=" text-black outline-none col-span-2 rounded-md"
