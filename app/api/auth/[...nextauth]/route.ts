@@ -19,8 +19,10 @@ const handler = NextAuth({
         },
       },
 
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         try {
+          if (!credentials || !credentials.username || !credentials.password)
+            return null;
           const response = await fetch("http://localhost:3500/listOfUsers");
           const users = await response.json();
           let user = users.filter(
@@ -33,14 +35,13 @@ const handler = NextAuth({
               }
             }
           )[0];
-          if (user.name) {
+          if (user && response.ok) {
             return user;
           } else {
             return null;
           }
-        } catch (error) {
-          console.log(error);
-          return null;
+        } catch (e) {
+          console.log(e);
         }
       },
     }),
