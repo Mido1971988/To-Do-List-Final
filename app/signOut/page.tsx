@@ -9,7 +9,7 @@ const SignOut = () => {
     <Modal>
       <div>
         <div className="bg-gradient-to-b  from-slate-50 to-slate-200 p-2 text-center text-slate-600">
-          Sign Up Form
+          Sign Out
         </div>
         <div className="p-2 flex flex-col gap-3">
           <div className="flex items-center justify-center mt-2 gap-2">

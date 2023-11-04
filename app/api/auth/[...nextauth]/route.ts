@@ -20,22 +20,26 @@ const handler = NextAuth({
       },
 
       async authorize(credentials) {
-        let user = { id: "", name: "", password: "" };
-        const response = await fetch("http://localhost:3500/listOfUsers");
-        const users = await response.json();
-        user = users.filter(
-          (oneUser: { id: string; name: string; password: string }) => {
-            if (
-              credentials?.username === oneUser.name &&
-              credentials?.password === oneUser.password
-            ) {
-              return true;
+        try {
+          const response = await fetch("http://localhost:3500/listOfUsers");
+          const users = await response.json();
+          let user = users.filter(
+            (oneUser: { id: string; name: string; password: string }) => {
+              if (
+                credentials?.username === oneUser.name &&
+                credentials?.password === oneUser.password
+              ) {
+                return true;
+              }
             }
+          )[0];
+          if (user.name) {
+            return user;
+          } else {
+            return null;
           }
-        )[0];
-        if (user.name !== "") {
-          return user;
-        } else {
+        } catch (error) {
+          console.log(error);
           return null;
         }
       },

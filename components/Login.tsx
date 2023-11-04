@@ -1,10 +1,11 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import InputBox from "./InputBox";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+// will be be props only if redirect : true
 type Props = {
   className?: string;
   callbackUrl?: string;
@@ -15,6 +16,7 @@ const Login = (props: Props) => {
   const router = useRouter();
   let userName = "";
   let pass = "";
+  let [unAuth, setUnAuth] = useState(false);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,18 +24,25 @@ const Login = (props: Props) => {
       username: userName,
       password: pass,
       redirect: false,
+    }).then((e) => {
+      if (e?.ok) {
+        router.push(props.callbackUrl ?? "http://localhost:3000");
+      } else {
+        setUnAuth(true);
+      }
     });
-
-    if (!res?.error) {
-      router.push(props.callbackUrl ?? "http://localhost:3000");
-    }
   };
   return (
     <div className={props.className}>
       <div className="bg-gradient-to-b  from-slate-50 to-slate-200 p-2 text-center text-slate-600">
         Login Form
       </div>
-      {!!props.error && (
+      {/* {!!props.error && (
+        <p className="bg-red-100 text-red-600 text-center p-2">
+          Authentication Failed
+        </p>
+      )} */}
+      {unAuth && (
         <p className="bg-red-100 text-red-600 text-center p-2">
           Authentication Failed
         </p>
