@@ -81,6 +81,8 @@ export default function Options({
         })
         .then(console.log)
         .catch((err) => console.log(err));
+    } else {
+      console.log("No User Signed In!");
     }
   };
 

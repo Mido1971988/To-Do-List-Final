@@ -39,30 +39,30 @@ export default function Home() {
   let tasksArrayObjects: TaskObject[] = [...newTasksArray];
 
   // to add inital Tasks When Component mounts
-  useEffect(() => {
-    // // [1] import tsx file
-    // tasksArrayObjects = [...initialTasks];
-    // // [2] use fetch local json File from Public directory
-    // fetch("data/initialTasksJson.json")
-    //   .then((res) => res.json())
-    //   .then(setNewTasksArray);
-    // // [3] use fetch json File from server
-    // fetch("http://localhost:3500")
-    //   .then((res) => {
-    //     if (!res.ok) {
-    //       throw new Error("Failed to Fetch");
-    //     }
-    //     return res.json();
-    //   })
-    //   .then((res) => {
-    //     setNewTasksArray(res[0].Mido1_88);
-    //     let filteredCompletedTasksArray = noOfCompleted(res[0].Mido1_88);
-    //     setcompletedArray(filteredCompletedTasksArray);
-    //   })
-    //   .catch((err) => console.log("Server not Running...."));
-  }, [loading]);
+  // useEffect(() => {
+  //   // [1] import tsx file
+  //   tasksArrayObjects = [...initialTasks];
+  //   // [2] or  use fetch local json File from Public directory
+  //   fetch("data/initialTasksJson.json")
+  //     .then((res) => res.json())
+  //     .then(setNewTasksArray);
+  //   // [3] or use fetch json File from server
+  //   fetch("http://localhost:3500")
+  //     .then((res) => {
+  //       if (!res.ok) {
+  //         throw new Error("Failed to Fetch");
+  //       }
+  //       return res.json();
+  //     })
+  //     .then((res) => {
+  //       setNewTasksArray(res[0].Mido1_88);
+  //       let filteredCompletedTasksArray = noOfCompleted(res[0].Mido1_88);
+  //       setcompletedArray(filteredCompletedTasksArray);
+  //     })
+  //     .catch((err) => console.log("Server not Running...."));
+  // }, [loading]);
 
-  // Fetch tasks according to signed user by next-auth
+  // Fetch tasks according to signed user by next-auth or onClick on Load Button
   useEffect(() => {
     if (status === "authenticated") {
       fetch("http://localhost:3500/tasks")
@@ -94,7 +94,7 @@ export default function Home() {
       setNewTasksArray([]);
       setcompletedArray([]);
     }
-  }, [status]);
+  }, [status, loading]);
 
   // Delete task
   useEffect(() => {

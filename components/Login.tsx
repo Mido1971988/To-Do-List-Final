@@ -2,8 +2,8 @@
 import React, { useRef, useState } from "react";
 import InputBox from "./InputBox";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
 
 // will be be props only if redirect : true
 type Props = {
@@ -16,21 +16,27 @@ const Login = (props: Props) => {
   const router = useRouter();
   let userName = "";
   let pass = "";
+  let userInput = useRef<HTMLInputElement>(null);
+  let passInput = useRef<HTMLInputElement>(null);
+
   let [unAuth, setUnAuth] = useState(false);
+  let { data: session, status } = useSession();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (userInput && userInput.current) userInput.current.value = "";
+    if (passInput && passInput.current) passInput.current.value = "";
     e.preventDefault();
-    const res = await signIn("credentials", {
+    let res = await signIn("credentials", {
       username: userName,
       password: pass,
       redirect: false,
-    }).then((e) => {
-      if (e?.ok) {
-        router.push(props.callbackUrl ?? "http://localhost:3000");
-      } else {
-        setUnAuth(true);
-      }
     });
+    if (res?.error) {
+      setUnAuth(true);
+    } else {
+      setUnAuth(false);
+      router.push(props.callbackUrl ?? "http://localhost:3000");
+    }
   };
   return (
     <div className={props.className}>
@@ -51,12 +57,14 @@ const Login = (props: Props) => {
         <InputBox
           name="username"
           labelText="User Name"
+          inputRef={userInput}
           onChange={(e) => (userName = e.target.value)}
         />
         <InputBox
           name="password"
           type="password"
           labelText="Password"
+          inputRef={passInput}
           onChange={(e) => (pass = e.target.value)}
         />
         <div className="flex items-center justify-center mt-2 gap-2">
