@@ -8,6 +8,8 @@ import { TaskObject } from "@/types/TaskObject.types";
 import initialTasks from "@/public/data/initialTasks";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
@@ -65,7 +67,12 @@ export default function Home() {
   // Fetch tasks according to signed user by next-auth or onClick on Load Button
   useEffect(() => {
     if (status === "authenticated") {
-      fetch("http://localhost:3500/tasks")
+      toast
+        .promise(fetch("http://localhost:3500/tasks"), {
+          pending: "Signing in....",
+          success: "Signed In Successfully",
+          error: "Signing in Failed!",
+        })
         .then((res) => {
           if (!res.ok) {
             throw new Error("Failed to Fetch");
@@ -91,8 +98,8 @@ export default function Home() {
         })
         .catch((err) => console.log("Server not Running...."));
     } else {
-      setNewTasksArray([]);
-      setcompletedArray([]);
+      // setNewTasksArray([]);
+      // setcompletedArray([]);
     }
   }, [status, loading]);
 
@@ -197,6 +204,7 @@ export default function Home() {
 
   // Select All on click Function
   let selectAllFunc = (e: React.MouseEvent) => {
+    console.log("object");
     if (!tasksArrayObjects.length) return;
     if (e.currentTarget.innerHTML === "Select All") {
       e.currentTarget.innerHTML = "Deselect All";
@@ -330,6 +338,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }

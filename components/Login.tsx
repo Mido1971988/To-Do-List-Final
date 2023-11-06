@@ -3,7 +3,9 @@ import React, { useRef, useState } from "react";
 import InputBox from "./InputBox";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // will be be props only if redirect : true
 type Props = {
@@ -20,7 +22,6 @@ const Login = (props: Props) => {
   let passInput = useRef<HTMLInputElement>(null);
 
   let [unAuth, setUnAuth] = useState(false);
-  let { data: session, status } = useSession();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     if (userInput && userInput.current) userInput.current.value = "";
@@ -31,6 +32,20 @@ const Login = (props: Props) => {
       password: pass,
       redirect: false,
     });
+
+    // let res = await toast.promise(
+    //   signIn("credentials", {
+    //     username: userName,
+    //     password: pass,
+    //     redirect: false,
+    //   }),
+    //   {
+    //     pending: "Signing in....",
+    //     success: "Signed In Successfully",
+    //     error: "Signing in Failed!",
+    //   }
+    // );
+
     if (res?.error) {
       setUnAuth(true);
     } else {
