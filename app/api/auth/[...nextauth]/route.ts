@@ -23,6 +23,7 @@ const handler = NextAuth({
         try {
           if (!credentials || !credentials.username || !credentials.password)
             return null;
+
           const response = await fetch("http://localhost:3500/listOfUsers");
           const users = await response.json();
           let user = users.filter(
@@ -41,7 +42,7 @@ const handler = NextAuth({
             return null;
           }
         } catch (e) {
-          console.log(e);
+          console.log("Failed to Fetch Users from server");
         }
       },
     }),

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { error } from "console";
 
 // will be be props only if redirect : true
 type Props = {
@@ -21,38 +21,40 @@ const Login = (props: Props) => {
   let userInput = useRef<HTMLInputElement>(null);
   let passInput = useRef<HTMLInputElement>(null);
 
-  let [unAuth, setUnAuth] = useState(false);
+  let [unAuth, setUnAuth] = useState<boolean | string>(false);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     if (userInput && userInput.current) userInput.current.value = "";
     if (passInput && passInput.current) passInput.current.value = "";
     e.preventDefault();
-    let res = await signIn("credentials", {
+
+    let usersResponse;
+    try {
+      usersResponse = await fetch("http://localhost:3500/listOfUsers");
+    } catch (e) {
+      console.log((e as Error).message);
+    }
+    if (!usersResponse?.ok) {
+      toast.error("Failed To Fetch Users");
+      setUnAuth("Failed To Fetch Users");
+      return;
+    }
+
+    await signIn("credentials", {
       username: userName,
       password: pass,
       redirect: false,
+    }).then((res) => {
+      if (res?.error) {
+        toast.error("User and Pass are wrong");
+        setUnAuth("User and Pass are wrong");
+      } else {
+        setUnAuth(false);
+        router.push(props.callbackUrl ?? "/");
+      }
     });
-
-    // let res = await toast.promise(
-    //   signIn("credentials", {
-    //     username: userName,
-    //     password: pass,
-    //     redirect: false,
-    //   }),
-    //   {
-    //     pending: "Signing in....",
-    //     success: "Signed In Successfully",
-    //     error: "Signing in Failed!",
-    //   }
-    // );
-
-    if (res?.error) {
-      setUnAuth(true);
-    } else {
-      setUnAuth(false);
-      router.push(props.callbackUrl ?? "http://localhost:3000");
-    }
   };
+
   return (
     <div className={props.className}>
       <div className="bg-gradient-to-b  from-slate-50 to-slate-200 p-2 text-center text-slate-600">
@@ -64,9 +66,7 @@ const Login = (props: Props) => {
         </p>
       )} */}
       {unAuth && (
-        <p className="bg-red-100 text-red-600 text-center p-2">
-          Authentication Failed
-        </p>
+        <p className="bg-red-100 text-red-600 text-center p-2">{unAuth}</p>
       )}
       <form onSubmit={onSubmit} className="p-2 flex flex-col gap-3">
         <InputBox

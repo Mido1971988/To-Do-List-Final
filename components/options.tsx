@@ -1,6 +1,9 @@
+"use client";
 import { useState } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
 import { useSession } from "next-auth/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Options({
   optionsValue,
@@ -77,12 +80,13 @@ export default function Options({
       })
         .then((res) => {
           if (!res.ok) throw new Error("Failed");
+          toast(`${userName}'s Task Saved ✅`);
           return res.text();
         })
         .then(console.log)
         .catch((err) => console.log(err));
     } else {
-      console.log("No User Signed In!");
+      toast.error("No User Signed In! ⛔️ ");
     }
   };
 

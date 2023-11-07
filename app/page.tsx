@@ -37,6 +37,7 @@ export default function Home() {
   // refs
   let inputRef = useRef<HTMLInputElement>(null);
   let selectAllRef = useRef<HTMLButtonElement>(null);
+  let skipInitialRender = useRef(false);
 
   let tasksArrayObjects: TaskObject[] = [...newTasksArray];
 
@@ -66,11 +67,17 @@ export default function Home() {
 
   // Fetch tasks according to signed user by next-auth or onClick on Load Button
   useEffect(() => {
+    if (status === "loading") return;
     if (status === "authenticated") {
       toast
         .promise(fetch("http://localhost:3500/tasks"), {
           pending: "Signing in....",
-          success: "Signed In Successfully",
+          success: {
+            render() {
+              return `${session?.user?.name} Signed In`;
+            },
+            icon: "🟢",
+          },
           error: "Signing in Failed!",
         })
         .then((res) => {
@@ -96,12 +103,50 @@ export default function Home() {
             }
           }
         })
-        .catch((err) => console.log("Server not Running...."));
-    } else {
-      // setNewTasksArray([]);
-      // setcompletedArray([]);
+        .catch((err) => toast.error("Failed to Fecth Tasks from Server"));
     }
-  }, [status, loading]);
+  }, [status]);
+
+  // to Load Tasks when Load Button Clicked
+  useEffect(() => {
+    if (skipInitialRender.current) {
+      if (session?.user) {
+        toast
+          .promise(fetch("http://localhost:3500/tasks"), {
+            pending: "Signing in....",
+            success: `${session?.user?.name}'s Task Loaded`,
+            error: "Signing in Failed!",
+          })
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Failed to Fetch");
+            }
+            return res.json();
+          })
+          .then((res) => {
+            if (session && session.user && session.user.name) {
+              let username = session?.user?.name;
+              let foundTasks = res.filter(
+                (task: { [key: string]: TaskObject[] }) => {
+                  if (task[username]) return true;
+                }
+              );
+              if (foundTasks.length) {
+                setNewTasksArray(foundTasks[0][username]);
+                let filteredCompletedTasksArray = noOfCompleted(
+                  foundTasks[0][username]
+                );
+                setcompletedArray(filteredCompletedTasksArray);
+              }
+            }
+          })
+          .catch((err) => toast.error("Failed to Fecth Tasks from Server"));
+      } else {
+        toast.error("No User Signed In! ⛔️ ");
+      }
+    }
+    skipInitialRender.current = true;
+  }, [loading]);
 
   // Delete task
   useEffect(() => {
@@ -141,9 +186,19 @@ export default function Home() {
         setSelectAllValue(true);
         tasksArrayObjects.map((taskObject) => (taskObject.selected = false));
       }
-      setOptionsValue(arg);
+      if (!tasksArrayObjects.length) {
+        setOptionsValue(false);
+        toast.error("No Tasks To Select !");
+      } else {
+        setOptionsValue(arg);
+      }
     } else if (mission === "move" && typeof arg === "boolean") {
-      setMoveValue(arg);
+      if (!tasksArrayObjects.length) {
+        setMoveValue(false);
+        toast.error("No Tasks To Move !");
+      } else {
+        setMoveValue(arg);
+      }
     } else if (mission === "moveUp" && typeof arg === "number") {
       tasksArrayObjects.map((task, indx) => {
         if (indx === 0) task.up = false;
@@ -203,15 +258,17 @@ export default function Home() {
   };
 
   // Select All on click Function
-  let selectAllFunc = (e: React.MouseEvent) => {
-    console.log("object");
-    if (!tasksArrayObjects.length) return;
-    if (e.currentTarget.innerHTML === "Select All") {
+  let selectAllFunc = (e: React.MouseEvent | null = null) => {
+    if (!tasksArrayObjects.length) {
+      toast.error("No Tasks to Select !");
+      return;
+    }
+    if (e?.currentTarget.innerHTML === "Select All") {
       e.currentTarget.innerHTML = "Deselect All";
       tasksArrayObjects.map((taskObject) => (taskObject.selected = true));
       setSelectAllValue(!selectAllValue);
       if (!optionsValue) setOptionsValue(true);
-    } else {
+    } else if (e?.currentTarget.innerHTML === "Deselect All") {
       e.currentTarget.innerHTML = "Select All";
       tasksArrayObjects.map((taskObject) => {
         taskObject.selected = false;
@@ -221,8 +278,28 @@ export default function Home() {
     }
   };
 
+  // to check if Server Online or Not
+  let handleServer = (e: React.MouseEvent) => {
+    (async (ele) => {
+      try {
+        const response = await fetch("http://localhost:3500/listOfUsers");
+        if (response.ok) {
+          ele.innerHTML = `Server is 🟢`;
+        }
+      } catch (error) {
+        ele.innerHTML = `Server is 🔴`;
+      }
+    })(e.currentTarget);
+  };
+
   return (
     <>
+      <button
+        className=" text-black font-serif font-bold col-span-1 rounded-md w-30 mt-5"
+        onClick={(e) => handleServer(e)}
+      >
+        Check Server
+      </button>
       {/* To Do List Title */}
       <h1 className=" text-red-600 text-[40px] font-black font-serif text-center mt-5">
         To Do List
@@ -275,10 +352,15 @@ export default function Home() {
         <button
           className="text-white col-span-1 bg-red-500 rounded-md"
           onClick={() => {
-            if (!tasksArrayObjects.length) return;
+            if (!tasksArrayObjects.length) {
+              toast.error("No Tasks To Delete !");
+              return;
+            }
             if (confirm("Are You Sure Delete All Tasks ?")) {
               setcompletedArray([]);
               setNewTasksArray([]);
+              setOptionsValue(false);
+              selectAllFunc();
             } else {
               return;
             }
@@ -338,7 +420,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer hideProgressBar />
     </>
   );
 }
