@@ -30,7 +30,8 @@ const Login = (props: Props) => {
 
     let usersResponse;
     try {
-      usersResponse = await fetch("http://localhost:3500/listOfUsers");
+      // usersResponse = await fetch("http://localhost:3500/listOfUsers");
+      usersResponse = await fetch("api/listOfUsers");
     } catch (e) {
       console.log((e as Error).message);
     }

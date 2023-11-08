@@ -69,7 +69,8 @@ export default function Options({
     if (status === "authenticated" && session && session.user) {
       let userName = session?.user.name;
       let reqBody = [userName, tasks];
-      fetch("http://localhost:3500/tasks", {
+      // fetch("http://localhost:3500/tasks", {
+      fetch("api/tasks", {
         method: "post",
         mode: "cors",
         headers: {

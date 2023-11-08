@@ -70,7 +70,8 @@ export default function Home() {
     if (status === "loading") return;
     if (status === "authenticated") {
       toast
-        .promise(fetch("http://localhost:3500/tasks"), {
+        // .promise(fetch("http://localhost:3500/tasks"), {
+        .promise(fetch("/api/tasks"), {
           pending: "Signing in....",
           success: {
             render() {
@@ -112,7 +113,8 @@ export default function Home() {
     if (skipInitialRender.current) {
       if (session?.user) {
         toast
-          .promise(fetch("http://localhost:3500/tasks"), {
+          // .promise(fetch("http://localhost:3500/tasks"), {
+          .promise(fetch("/api/tasks"), {
             pending: "Signing in....",
             success: `${session?.user?.name}'s Task Loaded`,
             error: "Signing in Failed!",
@@ -282,7 +284,8 @@ export default function Home() {
   let handleServer = (e: React.MouseEvent) => {
     (async (ele) => {
       try {
-        const response = await fetch("http://localhost:3500/listOfUsers");
+        // const response = await fetch("http://localhost:3500/listOfUsers");
+        const response = await fetch("api/listOfUsers");
         if (response.ok) {
           ele.innerHTML = `Server is 🟢`;
         }

@@ -4,6 +4,9 @@ import InputBox from "@/components/InputBox";
 import { Modal } from "@/components/Modal";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type Props = {
   className?: string;
@@ -14,11 +17,16 @@ type Props = {
 const signUp = (props: Props) => {
   let userName = "";
   let passWord = "";
+  let userInput = useRef<HTMLInputElement>(null);
+  let passInput = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   let onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    fetch("http://localhost:3500/listOfUsers")
+    if (userInput && userInput.current) userInput.current.value = "";
+    if (passInput && passInput.current) passInput.current.value = "";
+    // fetch("http://localhost:3500/listOfUsers")
+    fetch("api/listOfUsers")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to Fetch");
@@ -41,7 +49,7 @@ const signUp = (props: Props) => {
             password: passWord,
           };
           res.push(newUser);
-          fetch("http://localhost:3500/listOfUsers", {
+          fetch("api/listOfUsers", {
             method: "post",
             mode: "cors",
             headers: {
@@ -75,12 +83,14 @@ const signUp = (props: Props) => {
             name="username"
             labelText="User Name"
             onChange={(e) => (userName = e.target.value)}
+            inputRef={userInput}
           />
           <InputBox
             name="password"
             type="password"
             labelText="Password"
             onChange={(e) => (passWord = e.target.value)}
+            inputRef={passInput}
           />
           <div className="flex items-center justify-center mt-2 gap-2">
             <button

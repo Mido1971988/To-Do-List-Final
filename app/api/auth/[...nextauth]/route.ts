@@ -1,5 +1,6 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { promises as fs } from "fs";
 
 const handler = NextAuth({
   providers: [
@@ -23,10 +24,13 @@ const handler = NextAuth({
         try {
           if (!credentials || !credentials.username || !credentials.password)
             return null;
-
-          const response = await fetch("http://localhost:3500/listOfUsers");
-          const users = await response.json();
-          let user = users.filter(
+          // const response = await fetch("http://localhost:3500/listOfUsers");
+          const file = await fs.readFile(
+            process.cwd() + "/myData/listOfUsers.json",
+            "utf8"
+          );
+          const userList = JSON.parse(file);
+          let user = userList.filter(
             (oneUser: { id: string; name: string; password: string }) => {
               if (
                 credentials?.username === oneUser.name &&
@@ -36,7 +40,7 @@ const handler = NextAuth({
               }
             }
           )[0];
-          if (user && response.ok) {
+          if (user) {
             return user;
           } else {
             return null;
