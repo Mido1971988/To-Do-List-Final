@@ -2,12 +2,11 @@
 import React, { useRef, useState } from "react";
 import InputBox from "./InputBox";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { error } from "console";
 
-// will be be props only if redirect : true
+// will be be props only if redirect : true in signIn (in Login.tsx)
 type Props = {
   className?: string;
   callbackUrl?: string;
@@ -18,16 +17,19 @@ const Login = (props: Props) => {
   const router = useRouter();
   let userName = "";
   let pass = "";
+  // refs to Clear Input Fields after Signing in
   let userInput = useRef<HTMLInputElement>(null);
   let passInput = useRef<HTMLInputElement>(null);
 
   let [unAuth, setUnAuth] = useState<boolean | string>(false);
 
+  // to Handle Click on Sign In Button
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     if (userInput && userInput.current) userInput.current.value = "";
     if (passInput && passInput.current) passInput.current.value = "";
     e.preventDefault();
 
+    // To Check if failed to fecth from external Api or your own Api Endpoint
     let usersResponse;
     try {
       // usersResponse = await fetch("http://localhost:3500/listOfUsers");

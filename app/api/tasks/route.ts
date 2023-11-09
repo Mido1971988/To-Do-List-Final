@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+// Webpack will bundle the JSON for you at build time so tasks will be regular js object
 import tasks from "../../../myData/tasks.json";
 import { TaskObject } from "@/types/TaskObject.types";
 import { promises as fs } from "fs";
@@ -15,6 +16,7 @@ export async function POST(request: Request) {
   );
   const tasksData = JSON.parse(serverTasks);
   let found = false;
+  // [key: string] is Index signature syntax
   tasksData.map((task: { [key: string]: TaskObject[] }) => {
     if (task[res[0]]) {
       task[res[0]] = res[1];

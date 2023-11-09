@@ -17,10 +17,12 @@ type Props = {
 const signUp = (props: Props) => {
   let userName = "";
   let passWord = "";
+  // refs to Clear Input Fields after Signing Up
   let userInput = useRef<HTMLInputElement>(null);
   let passInput = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
+  // Handle Click on Sign Up Button
   let onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (userInput && userInput.current) userInput.current.value = "";
@@ -64,9 +66,12 @@ const signUp = (props: Props) => {
             })
             .then((res) => {
               console.log(res);
-              router.push("http://localhost:3000");
+              router.push("/");
             })
             .catch((err) => console.log(err));
+        } else {
+          toast.error(`User ${foundUser[0].name} Already Exists`);
+          router.push("/");
         }
       })
       .catch((err) => console.log("Server not Running...."));

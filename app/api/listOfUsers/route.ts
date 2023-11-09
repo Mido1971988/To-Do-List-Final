@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+// Webpack will bundle the JSON for you at build time so listOfUsers will be regular js object
 import listOfUsers from "@/myData/listOfUsers.json";
 import { promises as fs } from "fs";
 

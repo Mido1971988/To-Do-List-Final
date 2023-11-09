@@ -24,12 +24,20 @@ const handler = NextAuth({
         try {
           if (!credentials || !credentials.username || !credentials.password)
             return null;
+          // [1] you can fetch from external api
           // const response = await fetch("http://localhost:3500/listOfUsers");
-          const file = await fs.readFile(
-            process.cwd() + "/myData/listOfUsers.json",
-            "utf8"
-          );
-          const userList = JSON.parse(file);
+
+          // [2] you can fetch from your own api endpoint
+          const response = await fetch("http://localhost:3000/api/listOfUsers");
+          const userList = await response.json();
+
+          // [3] you can read JSON file from your local Folder
+          // const file = await fs.readFile(
+          //   process.cwd() + "/myData/listOfUsers.json",
+          //   "utf8"
+          // );
+          // const userList = JSON.parse(file);
+
           let user = userList.filter(
             (oneUser: { id: string; name: string; password: string }) => {
               if (

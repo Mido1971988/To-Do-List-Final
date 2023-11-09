@@ -5,13 +5,13 @@ import Options from "@/components/options";
 import SigninButton from "@/components/signinButton";
 import { useState, useRef, useEffect } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
-import initialTasks from "@/public/data/initialTasks";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
+  // Hook for tasks
   let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
 
   // Hooks for options.tsx
@@ -39,33 +39,10 @@ export default function Home() {
   let selectAllRef = useRef<HTMLButtonElement>(null);
   let skipInitialRender = useRef(false);
 
+  // Array of Tasks's Objects
   let tasksArrayObjects: TaskObject[] = [...newTasksArray];
 
-  // to add inital Tasks When Component mounts
-  // useEffect(() => {
-  //   // [1] import tsx file
-  //   tasksArrayObjects = [...initialTasks];
-  //   // [2] or  use fetch local json File from Public directory
-  //   fetch("data/initialTasksJson.json")
-  //     .then((res) => res.json())
-  //     .then(setNewTasksArray);
-  //   // [3] or use fetch json File from server
-  //   fetch("http://localhost:3500")
-  //     .then((res) => {
-  //       if (!res.ok) {
-  //         throw new Error("Failed to Fetch");
-  //       }
-  //       return res.json();
-  //     })
-  //     .then((res) => {
-  //       setNewTasksArray(res[0].Mido1_88);
-  //       let filteredCompletedTasksArray = noOfCompleted(res[0].Mido1_88);
-  //       setcompletedArray(filteredCompletedTasksArray);
-  //     })
-  //     .catch((err) => console.log("Server not Running...."));
-  // }, [loading]);
-
-  // Fetch tasks according to signed user by next-auth or onClick on Load Button
+  // Fetch tasks according to signed user by next-auth
   useEffect(() => {
     if (status === "loading") return;
     if (status === "authenticated") {
@@ -297,6 +274,7 @@ export default function Home() {
 
   return (
     <>
+      {/* Check Server Button */}
       <button
         className=" text-black font-serif font-bold col-span-1 rounded-md w-30 mt-5"
         onClick={(e) => handleServer(e)}

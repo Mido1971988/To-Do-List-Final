@@ -18,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        {/* Provider for next-auth so yuou can use useSession() to get status and data */}
         <Providers>{children}</Providers>
       </body>
     </html>

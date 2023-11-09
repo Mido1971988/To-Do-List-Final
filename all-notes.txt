@@ -32942,6 +32942,12 @@ but in nextjs by default will combine those 2 fetches to one fetch.
         [2] path=/ ( / means home page)
         [3] &secret=DaveGrayTeachesCode ( we added secret token to do revalidation only with this token)
 
+
+* Note : 
+    If you import server component inside client component will be also client component 
+    But if you pass server component as child to client component will remain server component that’s why you can wrap your app with client side provider and will not change your server side components
+    See this ( https://youtu.be/9YuHTGAAyu0?si=vhW26hHqNPWTmRVM)
+    
 * server Actions ( check ToDoList project folder ) : 
     They enable server-side data mutations, reduced client-side JavaScript, 
     and progressively enhanced forms
@@ -33781,6 +33787,21 @@ Express :
     while NoSQL databases like MongoDB are used to save unstructured data
 
     see MongoDB Video from this list ( https://youtube.com/playlist?list=PL0Zuz27SZ-6PFkIxaJ6Xx_X46avTM1aYw&si=6DenB09VA9AZ5tS1)
+
+* Authentication ( next-auth ) Steps : 
+[1] npm i next-auth
+[2] create folder api/auth/[...nextauth]/route.ts
+[3] route.ts : inside hander add :
+    [a] Providers 
+    [b] async authorize (here you write your logic from where will you get username and        password from data base and compare them to credentials (what user typed at input fields))
+    [c] pages (if you want to create custome page for signIn and signOut) 
+    [d] secret token (from .ev.local ))
+[4] use async signIn ( 2 parameters ( credentials , options object)) and signOut 
+    (1 parameter options object) Methdos
+[5] use useSession if you want to get data and status of Authorization (1 - authenticated , 2 - authenticated , 3 - loading )( user signed in or not or loading)
+
+
+
 
     
 ***************************************** Algorithm *****************************************
