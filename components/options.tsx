@@ -94,7 +94,7 @@ export default function Options({
   return (
     <>
       {optionsValue ? (
-        <div className="grid grid-cols-5 m-auto w-6/12 gap-1 mt-5">
+        <div className="grid grid-cols-5 m-auto w-3/4 gap-1 mt-5 max-sm:text-[12px]">
           <button
             className=" text-black bg-green-500 rounded-md"
             onClick={swapFunc}
@@ -120,7 +120,7 @@ export default function Options({
               }
             }}
           >
-            {detailsValue ? "Details..." : "Show Details"}
+            {detailsValue ? "Details..." : "Details"}
           </button>
           <button
             className=" text-black bg-red-500 rounded-md"
@@ -140,7 +140,7 @@ export default function Options({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-4 m-auto w-6/12 gap-10 mt-5">
+        <div className="grid grid-cols-4 m-auto w-3/4 gap-5 mt-5 max-sm:text-[14px]">
           {moveValue ? (
             <button
               className=" text-white col-span-1 bg-red-500 rounded-md"

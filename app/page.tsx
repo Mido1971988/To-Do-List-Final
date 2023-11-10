@@ -167,7 +167,7 @@ export default function Home() {
       }
       if (!tasksArrayObjects.length) {
         setOptionsValue(false);
-        toast.error("No Tasks To Select !");
+        toast.error("No Tasks To Select !", {});
       } else {
         setOptionsValue(arg);
       }
@@ -210,7 +210,7 @@ export default function Home() {
   // Input function
   let insertInput = () => {
     if (inputRef.current?.value === "") {
-      inputRef.current.placeholder = "You can't add Empty Task";
+      inputRef.current.placeholder = "  You can't add Empty Task";
       return;
     }
     inputRef.current?.placeholder
@@ -264,9 +264,15 @@ export default function Home() {
         // const response = await fetch("http://localhost:3500/listOfUsers");
         const response = await fetch("api/listOfUsers");
         if (response.ok) {
+          ele.classList.remove("bg-green-500");
+          ele.classList.remove("text-white");
+          ele.classList.add("text-black");
           ele.innerHTML = `Server is 🟢`;
         }
       } catch (error) {
+        ele.classList.remove("bg-green-500");
+        ele.classList.remove("text-white");
+        ele.classList.add("text-black");
         ele.innerHTML = `Server is 🔴`;
       }
     })(e.currentTarget);
@@ -276,13 +282,13 @@ export default function Home() {
     <>
       {/* Check Server Button */}
       <button
-        className=" text-black font-serif font-bold col-span-1 rounded-md w-30 mt-5"
+        className=" text-white font-serif rounded-md  mt-5 bg-green-500 max-sm:w-24 max-sm:text-[12px] w-32 "
         onClick={(e) => handleServer(e)}
       >
         Check Server
       </button>
       {/* To Do List Title */}
-      <h1 className=" text-red-600 text-[40px] font-black font-serif text-center mt-5">
+      <h1 className=" text-red-600 text-[40px] font-black font-serif text-center mt-5 max-sm:text-[24px]">
         To Do List
       </h1>
 
@@ -304,23 +310,27 @@ export default function Home() {
       </div>
 
       {/* no. of Tasks and no. of Completed */}
-      <div className="grid grid-cols-2 w-6/12 m-auto mt-5">
+      <div className="grid grid-cols-2 w-11/12 m-auto mt-5">
         <div className=" flex gap-3 justify-center">
-          <div className=" text-black">no. of Tasks</div>
-          <div className=" text-black bg-red-500 rounded-full flex justify-center items-center w-6 h-6">
+          <div className=" text-black max-sm:text-[12px] max-sm:leading-6">
+            no. of Tasks
+          </div>
+          <div className=" text-black bg-red-500 rounded-full flex justify-center items-center w-6 h-6 max-sm:w-4 max-sm:h-4 max-sm:text-[12px]">
             {newTasksArray.length}
           </div>
         </div>
         <div className=" flex gap-3 justify-center">
-          <div className=" text-black">no. of Completed</div>
-          <div className=" text-black bg-green-500 rounded-full flex justify-center items-center w-6 h-6">
+          <div className=" text-black max-sm:text-[12px] max-sm:leading-6">
+            no. of Completed
+          </div>
+          <div className=" text-black bg-green-500 rounded-full flex justify-center items-center w-6 h-6 max-sm:w-4 max-sm:h-4 max-sm:text-[12px]">
             {completedArray.length}
           </div>
         </div>
       </div>
 
       {/* Select All & Delete All */}
-      <div className="grid grid-cols-2 w-6/12 m-auto mt-5 gap-20 pl-5 pr-5">
+      <div className="grid grid-cols-2 w-11/12 m-auto mt-5 gap-20 pl-5 pr-5 max-sm:text-[12px]">
         <button
           ref={selectAllRef}
           className={`text-white col-span-1 rounded-md ${
@@ -352,16 +362,16 @@ export default function Home() {
       </div>
 
       {/* Write your Task */}
-      <div className=" grid grid-cols-3 gap-4 w-6/12 m-auto mt-5 p-5 bg-slate-100 rounded-md">
+      <div className=" grid grid-cols-3 gap-4 w-11/12 m-auto mt-5 p-5 bg-slate-100 rounded-md max-sm:text-[12px]">
         <input
           id="inputTask"
           type="text"
-          placeholder="Write your Task!"
-          className=" text-black outline-none col-span-2 rounded-md"
+          placeholder="   Write your Task!"
+          className=" text-black outline-none col-span-2 rounded-md "
           ref={inputRef}
         ></input>
         <button
-          className="text-white col-span-1 bg-green-500 rounded-md"
+          className="text-white col-span-1 bg-green-500 rounded-md max-sm:text-[12px] max-sm:leading-6"
           onClick={insertInput}
         >
           Add Task
@@ -379,8 +389,8 @@ export default function Home() {
       />
 
       {/* All Tasks */}
-      <div className=" flex flex-col items-center justify-center w-screen gap-1 mt-5">
-        <div className=" w-6/12 bg-slate-100 p-7">
+      <div className=" flex flex-col items-center justify-center w-screen gap-1 mt-5 ">
+        <div className="w-11/12 bg-slate-100 p-5">
           <div className=" flex flex-col items-center justify-center gap-5 ">
             {tasksArrayObjects.length ? (
               tasksArrayObjects.map((taskObject) => (
@@ -394,14 +404,14 @@ export default function Home() {
                 />
               ))
             ) : (
-              <div className=" text-slate-400 bg-white w-full text-center font-bold">
+              <div className=" text-slate-400 bg-white w-full text-center font-bold max-sm:text-[12px] rounded-md h-7 leading-7 ">
                 NO TASKS
               </div>
             )}
           </div>
         </div>
       </div>
-      <ToastContainer hideProgressBar />
+      <ToastContainer hideProgressBar draggable={false} />
     </>
   );
 }

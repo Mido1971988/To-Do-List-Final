@@ -88,7 +88,7 @@ export default function NewTask({
         </div>
       ) : (
         <div
-          className="grid grid-cols-5 gap-4 bg-white p-2 rounded-md w-full relative pointer-events-none"
+          className="grid max-sm:grid-cols-5 grid-cols-5 gap-2 bg-white p-2 rounded-md w-full relative pointer-events-none"
           onClick={handleClick}
         >
           <div
@@ -110,14 +110,14 @@ export default function NewTask({
                 : "border-black bg-white"
             }`}
           ></div>
-          <div ref={taskTextRef} className=" text-black col-span-3">
+          <div ref={taskTextRef} className=" text-black col-span-3 leading-7">
             {taskObject.text}
           </div>
           <button
             className={`${
               taskObject.done
-                ? "text-white col-span-1 bg-green-500 rounded-md pointer-events-auto"
-                : "text-white col-span-1 bg-slate-400 rounded-md pointer-events-auto"
+                ? "text-white col-span-1 bg-green-500 rounded-md pointer-events-auto max-sm:text-[12px] h-7 self-center"
+                : "text-white col-span-1 bg-slate-400 rounded-md pointer-events-auto max-sm:text-[12px] h-7 self-center"
             }`}
           >
             {taskObject.done ? "Done" : "Pending"}
@@ -131,7 +131,7 @@ export default function NewTask({
           >
             X
           </button>
-          <button className=" text-white col-span-1 bg-red-500 rounded-md pointer-events-auto">
+          <button className=" text-white col-span-1 bg-red-500 rounded-md pointer-events-auto max-sm:text-[12px] h-7 self-center">
             Edit
           </button>
         </div>
