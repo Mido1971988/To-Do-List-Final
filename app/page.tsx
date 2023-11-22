@@ -1,8 +1,9 @@
 "use client";
 
-import NewTask from "@/components/newTask";
-import Options from "@/components/options";
-import SigninButton from "@/components/signinButton";
+import NewTask from "@/components/NewTask";
+import Options from "@/components/Options";
+import SigninButton from "@/components/SigninButton";
+import ServerButton from "@/components/ServerButton";
 import { useState, useRef, useEffect } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
 import { useSession } from "next-auth/react";
@@ -45,10 +46,11 @@ export default function Home() {
   // Fetch tasks according to signed user by next-auth
   useEffect(() => {
     if (status === "loading") return;
+    const abortController = new AbortController();
     if (status === "authenticated") {
       toast
         // .promise(fetch("http://localhost:3500/tasks"), {
-        .promise(fetch("/api/tasks"), {
+        .promise(fetch("/api/tasks", { signal: abortController.signal }), {
           pending: "Signing in....",
           success: {
             render() {
@@ -83,15 +85,19 @@ export default function Home() {
         })
         .catch((err) => toast.error("Failed to Fecth Tasks from Server"));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [status]);
 
   // to Load Tasks when Load Button Clicked
   useEffect(() => {
+    const abortController = new AbortController();
     if (skipInitialRender.current) {
       if (session?.user) {
         toast
           // .promise(fetch("http://localhost:3500/tasks"), {
-          .promise(fetch("/api/tasks"), {
+          .promise(fetch("/api/tasks", { signal: abortController.signal }), {
             pending: "Signing in....",
             success: `${session?.user?.name}'s Task Loaded`,
             error: "Signing in Failed!",
@@ -125,6 +131,9 @@ export default function Home() {
       }
     }
     skipInitialRender.current = true;
+    return () => {
+      abortController.abort();
+    };
   }, [loading]);
 
   // Delete task
@@ -257,43 +266,17 @@ export default function Home() {
     }
   };
 
-  // to check if Server Online or Not
-  let handleServer = (e: React.MouseEvent) => {
-    (async (ele) => {
-      try {
-        // const response = await fetch("http://localhost:3500/listOfUsers");
-        const response = await fetch("api/listOfUsers");
-        if (response.ok) {
-          ele.classList.remove("bg-green-500");
-          ele.classList.remove("text-white");
-          ele.classList.add("text-black");
-          ele.innerHTML = `Server is 🟢`;
-        }
-      } catch (error) {
-        ele.classList.remove("bg-green-500");
-        ele.classList.remove("text-white");
-        ele.classList.add("text-black");
-        ele.innerHTML = `Server is 🔴`;
-      }
-    })(e.currentTarget);
-  };
-
   return (
     <>
       {/* Check Server Button */}
-      <button
-        className=" text-white font-serif rounded-md  mt-5 bg-green-500 max-sm:w-24 max-sm:text-[12px] w-32 "
-        onClick={(e) => handleServer(e)}
-      >
-        Check Server
-      </button>
+      <ServerButton />
+
       {/* To Do List Title */}
       <h1 className=" text-red-600 text-[40px] font-black font-serif text-center mt-5 max-sm:text-[24px]">
         To Do List
       </h1>
 
       {/* Sign In and Sign Up Buttons */}
-      {/* <SigninButton></SigninButton> */}
       <div className="flex justify-center gap-5">
         <SigninButton></SigninButton>
         {session && session.user ? (

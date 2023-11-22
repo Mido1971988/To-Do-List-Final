@@ -30600,6 +30600,10 @@ Types of Components :
             }
         }
 
+* difference betwee class component and functional component : 
+    class component has state but functional components are plain JavaScript functions. 
+    Thus to maintain state inside the function, React provides several hooks like useState
+
 JSX (JavaScript language syntax) : 
     * transiles to pure JS which is understood by Browser
     * Write XML-like code for elements and component
@@ -30629,6 +30633,7 @@ setState :
         setCount( count + 1 ) 
         } 
         \\ here will increment by 3 because we are using prev ( update count value ) 
+        \\ React groups multiple state updates into a single re-render for better performance
         Const handleClick = () => {
         setCount( prev => prev + 1 ) 
         setCount( prev => prev + 1 ) 
@@ -30660,10 +30665,10 @@ Conditional render (exp. userGreeting.js):
     [1] if / else
     [2] Variable
     [3] ternary operator
-    [4] short circuit operator
+    [4] short circuit operator (&&) or nullish coalescing operator(??)
 
 Keys of list :
-    * has to be uniquex
+    * has to be unique
     * to avoid a warning message on list (EXP. persons.js) add key property to each child
     * Key is not a prop (you can not access it see persons.js)
     * it is not recommended to use index as key because React link the item list to it's key
@@ -30759,7 +30764,7 @@ memo (because pure component does not work with functional component we use memo
     * export default React.memo(MemoComp) / React.memo() called higher order component (later will discuss)
 
 ref (reference can by added to DOM element or class Component): 
-    * you can create a ref object by React.createRef() in constructor and use ref attribute on element to link this element to created ref
+    * you can create a ref object by React.createRef() in constructor and use ref attribute on HTML element to link this element to created ref
     and this element will be stored as property called current so you can get it by this.myRef.current and you can for exp. Focus on it by this.myRef.current.focus() 
     * or you can add ref attribute to class component inside parent component and access this component by this.inputComp.current see (focusInput.js)
 
@@ -30774,7 +30779,7 @@ callback ref :
 
 forward ref : 
     * a technique that forwards a ref through a component to one of its children
-    * React.forwardRef(component) accept a component as a parameter and this component accept two parameter props and ref see (FRInput.js)
+    * React.forwardRef(component) accept a component as a parameter and this component accept two parameter props and ref see (FRInput.js and FRParentInput.js)
 
 Protals : 
     * root in React : in index.js you will find that we are creating a root using ReactDOM.createRoot() method
@@ -30802,9 +30807,9 @@ Higher Order Component HOC : is a pattern that takes a component as an argument 
     
 Render Props : 
     * render prop is a technique for sharing code between React Components using a prop whose value is a function
-    * same concept of HOC you have function and you need to write it to ClickCounterTwo and HoverConuterTwo so you can use 3rd component
-    like RenderProps.js and then you can add property(render property) to RenderProps component and this property can be a function and this function accepts
-    parameters and return ClickCounterTwo or HoverConuterTwo component and add those paramters as property to them (now you shared them ) 
+    like RenderProps.js and then you can add property(you can name this prop render or any other name) to RenderProps component and 
+    this property can be a function and this function accepts parameters and return ClickCounterTwo or HoverConuterTwo component 
+    and add those paramters as property to them (now you shared them ) 
     and last step to call render property inside RenderProps.js
 
 context : 
@@ -30814,7 +30819,7 @@ context :
     * Steps : 
         [1] create Context (see UserContext.js) : using React.createContext() Method then take from it 2 components Provider and Consumer
         [2] add Provider Component to APP Component and add property called value to it then inside Provider add ComponentA
-        [3] add Consumer to GrandChild (ComponentC) and insid Consumer add function the parameter of this function is the property value that you added to Provider
+        [3] add Consumer to GrandChild (ComponentC) and inside Consumer add function the parameter of this function is the property value that you added to Provider
 
     * you can add default value by adding it as parameter inside React.createContext() Method and if you didn't add Provider in APP.js 
     Consumer will search for Provider if not found will use default value
@@ -30863,7 +30868,7 @@ HOOKS :
     * Avoid the confusion of this keyword
     * Allow you to reuse stateful logic
     * Organize the logic inside a component into reusable isolated units
-    * Only call Hooks at the Top Level (do not call hooks inside  loops, conditions or nested functions)
+    * Only call Hooks at the Top Level (do not call hooks inside loops, conditions or nested functions)
     * Only call Hooks from React Functions (call them from React Functional Component not regular JS Function)
 
 useState Hook (lets you to add state to function component) : 
@@ -30875,8 +30880,7 @@ The Update Method that's returned from useState : (two options to use it) (see H
     [1] setState(new state value)
     [2] setState(function accepts prevState as an argument) this is safer incase of Batching
 
-    * Difference between it and setState is setState merge the object but The Update Method does not (see ClassCounterThree.js and HookCounterThree.js)
-     
+    * Difference between set state in class and setState Hook is setState merge the object but The set state in class does not (see ClassCounterThree.js and HookCounterThree.js)
     * for EXP. we have state object {firstName:"" , lastName: ""} when you use setState({firstName : "Soliman"}) 
     will not remove lastName property and state object will be like this {firstName:"Soliman" , lastName: ""}
     but with the Update Method when you setName({firstName : "Soliman"}) will remove lastName property
@@ -30920,7 +30924,7 @@ useReducer : is used for state management (alternative to useState)
 
     * you can combine useReducer and useContext Hooks like in ComponentD.js
 
-    * useState is mostly used when types of states are number, boolean, and string. useReducer is used when types of states are objects and arrays.
+    * useState is mostly used when types of states are number, boolean, array , object , string. useReducer is used when types of states are nested objects and nested arrays.
 
 react.memo : 
     * is a higher order component that's prevent the functional component to re-render if the props or stats did not change like in (Title.js or Count.js or Button.js)
@@ -30941,7 +30945,7 @@ useMemo Hook :
     * like useCallback Hook but will return a value of excuted function and will excute this function only if one of the Dependancies has changed
     * Exp in (MemoCounter.js) when MemoCounter Component renders isEven Function(contains while loop) will excute and take long time
     and MemoCounter component will re-render when you click on Count One or Two because you are changing state from incrementOne or incrementTwo Functions
-    but by using useMemo Hook you solve this problem
+    but by using useMemo Hook isEven function will be excuted only if click on Count One not two because you add counterOne in dependency array
 
 useRef Hook : 
     * with useRef Hook you can access DOM Node directly from Functional Component.
@@ -30961,12 +30965,6 @@ custome Hook :
     * EXP1. useDocumentTitle is a custome Hook and we use it with DoctitleOne.js and DocTitleTwo.js
     * EXP2. useCounter is a custome Hook and we use it with CounterOnee.js and CounterTwoo.js
     * EXP3. useinput is a custome Hook and we use it with UserForm.js
-
-Ways to cause Re-render : 
-[1] useState setter function
-[2] useReducer dispatch funcion
-[3] if parent Component re-renders
-[4] React Context
 
 Render (initial Render ) steps in React : 
     [A] Render Phase : 
@@ -30988,7 +30986,7 @@ Re-render Steps in React :
         Take the changes from Re-Render Phase and apply them to the DOM using React DOM Package 
 
 ** if state value is primitive : 
-useState setter function : if you update to the same value of current state will not re-render (except if not after initial Render cycle will re-render one more time then will not re-render again ) 
+useState setter function : if you update to the same value of current state will not re-render (will re-render one more time then will not re-render again but if after initial render will not re-render one more time ) 
 (if this is 1st re-render cycle and value is the same of initial Value the React will exit before comparing previous render to new Render
 but if this is not 1st re-render and value is the same of current Value React will continue to comparing previous render to new Render and then Exit before commit phase)
 
@@ -31031,12 +31029,14 @@ to avoid unnecessary re-render of Child :
 
 Incorrect Optimization : 
 
-    [1] ChildThree.js (wrapped with memo) will re-render even if you press count button in ParentThree.js because props.children is always a new reference (if it's a HTML Element <strong></strong> same concept of reference in objects but if normal text same concept of primitive values will not be new reference so props will not change so ChildThree will no re-render) 
+    [1] ChildThree.js (wrapped with memo) (will re-render when press name button beacause you are passing name as a prop from parent to child)
+    will re-render even if you press count button in ParentThree.js because props.children is always a new reference 
+    (if it's a HTML Element <strong></strong> same concept of reference in objects but if normal text same concept of primitive values will not be new reference so props will not change so ChildThree will not re-render) 
     when ParentThree.js re-render create new HTML with new reference) so you are changing the props of ChildThree every Time ParentThree.js re-render
 
-    [2] same reason on [1] ChildFive.js will re-render event if you press count button in ParentFour.js because prop is always a new reference (when ParentFour.js re-render create new person object or new handle funcion with new reference) so change props of ChildFive.js so will re-render
+    [2] same reason on ChildFive.js will re-render event if you press count button in ParentFour.js because prop is always a new reference (when ParentFour.js re-render create new person object or new handle function with new reference) so change props of ChildFive.js so will re-render
 
-    [3] ChildFour.js has now Date in JSX but you are wrapping it with memo so when you press on count buttion in parentThree.js ChildFour.js will not re-render (because of memo) so Date will not be updated in UI (Impure component)
+    [3] ChildFour.js has now Date in JSX but you are wrapping it with memo so when you press on count button in parentThree.js ChildFour.js will not re-render (because of memo) so Date will not be updated in UI (Impure component)
 
 to Solve Incorrect Optimization you can use useMemo & useCallback Hooks (like in ParentFour.js) :
     we used useMemo(() => person, []) so we returned person object only one time because of empty Dependancy array event if ParentFour re-render person object is the same and same reference
@@ -31061,7 +31061,7 @@ when you add children to component in App.tsx file you have to write the childre
     
 You can add Event handler function as prop but you have to write () => void as type in component file and if we want to use event parameter : 
     * Event (Click Event) >>> event: React.MouseEvent<HTMLButtonElement> in Button.jsx 
-    * Event (Input Cahnge Event) >>> event: React.ChangeEvent<HTMLInputElement> in Input.jsx 
+    * Event (Input Change Event) >>> event: React.ChangeEvent<HTMLInputElement> in Input.jsx 
 
 You can add css properties as a prop but you have to write styles: React.CSSProperties as type in component like in (Container.tsx)
 
@@ -31106,7 +31106,11 @@ Context with typescript :
 
 non-null assertion operator : 
     operator tells the compiler to ignore the possibility of it being null.
+    (but not recommended to use it bceause if became null will give you error and will crash the application)
     https://blog.logrocket.com/understanding-exclamation-mark-typescript/
+
+Type predicate Function 
+https://matiashernandez.dev/blog/post/what-are-type-predicates-in-typescript
 
 useRef with typescript : 
     [1] ref for DOM Element (like in DomRef.tsx)
@@ -31154,7 +31158,7 @@ Generics with typescript and react (in List.tsx):
     * <T extends {}> means will accept anything like type any
     * <T extends { id: number }> means will accept object but this object must has property call id and it's value is number 
 
-Restriction with typescript (in RandomNumber) :
+Restriction with typescript (in RandomNumber.tsx) :
     here we have 4 properties 
     [1] value : common with all possibilities
     [2] isPositive 
@@ -31194,7 +31198,7 @@ Extracting a Components Prop Types (in CustomComponents.tsx) :
 
 Polymorphic Component (in Text.tsx) :
     * we added Omit<React.ComponentProps<E>, keyof TextOwnProps<E>> 
-    because we do not want conflict between the types of own props and types of all default props of React.ComponentProps
+    because we do not want conflict between the types of textOwnProps and types of all default props of React.ComponentProps
 
 
 ------------------------------
@@ -34273,5 +34277,3 @@ Object.entries() - O(n)
 * Graph :
     A graph is a non-linear data structure that consists of a finite number of vertices (also called nodes) connected by edges
     Trees are a specific type of graph data structure.
-
-
