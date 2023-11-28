@@ -31214,7 +31214,8 @@ Steps To create Redux project :
 [1] npm init --yes
 [2] npm install redux
 
-* JS doesn’t have access to change state in Redux state container directly it should tell mediator ( Reducer ) what changes to the state ( action ) and the mediator ( Reducer ) will inform the Store the required changes on the state 
+* JS doesn’t have access to change state in Redux state container directly it should tell mediator ( Reducer ) 
+what changes to the state (object returned according to action.type in reducer function) and the mediator ( Reducer ) will inform the Store the required changes on the state 
 
 * Reducer accepts two parameters ( previous state , action )  and return the new state to the application 
 
@@ -31229,14 +31230,14 @@ Action creator : is a function that return an action object
 Redux Store : 
 * allow access to state by getState() method
 * Allow state to be updated by dispatch(action)
-* Register listener via subscribe(listener) this is the link between store and JS application ( will execute listener function each time state changes) 
+* Register listener via subscribe(listener) this is the link between store and JS application ( will execute listener function each time state in redux store changes) 
 * You can unregister to the store by calling the function returned by subscribe(listener) 
 
 To create Redux store 
 [1] Const redux = require(‘redux’)
 [2] const store = redux.createStore(reducer) 
 [3] const unsubscribe = store.subscribe(listener)
-[4] store.dispatch(action)
+[4] store.dispatch(action creator)
 [5] unsubsrcibe() 
 
 
@@ -31244,10 +31245,13 @@ Combine reducers :
 You can use one reducer for multiple actions but for large projects it’s better to use multiple reducers with multiple actions 
 
 Steps : 
-[1] const rootReducer =redux.combinereducers({cake: cakeReducer , iceCream : iceCreamducer })
+[1] const rootReducer =redux.combinereducers({cake: cakeReducer , iceCream : iceCreamReducer })
 
 Middleware : 
 Provides a 3rd party extension point between dispatching an action and the moment it reaches the reducer 
+steps : 
+[1] const applyMiddleware = redux.applyMiddleware
+[2] const store = createStore(reducer , applyMiddleware(middleware Func like logger or thunk))
 
 * To install Logger ( npm install redux-logger ) ( will show you what happend , will show you each step at console)
 Steps : 
@@ -31289,7 +31293,7 @@ if it returns a function then pass dispatch as an argument to that function.
     [2] import { composeWithDevTools } from 'redux-devtools-extension'
     [3] const store = createStore(rootReducer ,composeWithDevTools( applyMiddleware(logger)))
 
-* in NewCakeContainer.js weadded input html element to ask customer how many cakes he wants to buy 
+* in NewCakeContainer.js we added input html element to ask customer how many cakes he wants to buy 
 then add the number as argument to action creator function then this number will be added as payload property in action object
 
 * Steps of Async in react-redux in (userContainer.js): 
@@ -31304,7 +31308,9 @@ then add the number as argument to action creator function then this number will
     [3] create rootReducer.js if we want to combine more than one Reducer
     [4] create store.js to create store and add applyMiddleware if needed
     [5] create index.js if we want to import from ../redux folder without write specific location like import { buyCake, buyIceCream } from '../redux'
+    [6] wrap the the main component in App.js with Provider 
     ** incase of Async we need to add thunk Middleware in store.js and use useEffect Hook in component and make async calls in Actions.js
+
 
 ---------------------------------
 
@@ -32993,7 +32999,30 @@ but in nextjs by default will combine those 2 fetches to one fetch.
         if not will uncheck the box
 
     
+** Redux Toolkit with Nextjs 13 :
+[1] create Store by const store = configureStore({reducer : {auth.reducer}})
+[2] create slice by const auth = createSlice({ name : "auth" , intialState , reducers : { reducer functions}})
+[3] export const { logIn , logOut } = auth.actions; (logIn annd logOut are automatically created action creator functions corresponding to reducers function)
+[4] export default auth.reducer; (this will be added to configureStore )
+[5] create Provider component and wrap childeren with this Provider in layout.tsx
+[6] const dispatch = useDispatch()
+[7] dispatch(logIn()) or dispatch(logOut()) onClick on Buttons
+[8] const username = useSelector((state) => state.auth.reducer.value.username)  (useSelector to get state and show it to User )
+* notes : 
+    - configureStore:
+        * Call combineReducers to combine your slices reducers into the root reducer function
+        * Add the thunk middleware and called applyMiddleware
+        * In development, automatically add more middleware to check for common mistakes like accidentally mutating the state
+        * Automatically set up the Redux DevTools Extension connection
+        * Call createStore to create a Redux store using that root reducer and those configuration options
 
+    - CeateSlice :
+        A function that accepts an initial state, an object of reducer functions, 
+        and a "slice name", and automatically generates action creators and action types that correspond to the reducers and state.
+    
+    - useDispatch hook does not cause re-render but useSelector cause re-render
+
+    
 ***************************************** TailWind CSS *****************************************
 * Tailwind CSS :  is an open source CSS framework
 

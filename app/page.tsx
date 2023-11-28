@@ -10,6 +10,10 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { setValue } from "../redux/features/slice";
+import { AppDispatch, useAppSelector } from "@/redux/store";
+import AllTasks from "@/components/AllTasks";
 
 export default function Home() {
   // Hook for tasks
@@ -266,13 +270,19 @@ export default function Home() {
     }
   };
 
+  const dispatch = useDispatch<AppDispatch>();
+  const reduxState = useAppSelector((state) => state.myReducer.value);
+
   return (
     <>
       {/* Check Server Button */}
       <ServerButton />
 
       {/* To Do List Title */}
-      <h1 className=" text-red-600 text-[40px] font-black font-serif text-center mt-5 max-sm:text-[24px]">
+      <h1
+        onClick={() => dispatch(setValue("777"))}
+        className=" text-red-600 text-[40px] font-black font-serif text-center mt-5 max-sm:text-[24px]"
+      >
         To Do List
       </h1>
 
@@ -372,28 +382,15 @@ export default function Home() {
       />
 
       {/* All Tasks */}
-      <div className=" flex flex-col items-center justify-center w-screen gap-1 mt-5 ">
-        <div className="w-11/12 bg-slate-100 p-5">
-          <div className=" flex flex-col items-center justify-center gap-5 ">
-            {tasksArrayObjects.length ? (
-              tasksArrayObjects.map((taskObject) => (
-                <NewTask
-                  key={taskObject.id}
-                  renderMainPage={renderMainPage}
-                  taskObject={taskObject}
-                  optionsValue={optionsValue}
-                  detailsValue={detailsValue}
-                  moveValue={moveValue}
-                />
-              ))
-            ) : (
-              <div className=" text-slate-400 bg-white w-full text-center font-bold max-sm:text-[12px] rounded-md h-7 leading-7 ">
-                NO TASKS
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      <AllTasks
+        tasks={tasksArrayObjects}
+        renderMainPage={renderMainPage}
+        optionsValue={optionsValue}
+        detailsValue={detailsValue}
+        moveValue={moveValue}
+      />
+
+      {/* needed for Toast */}
       <ToastContainer hideProgressBar draggable={false} />
     </>
   );

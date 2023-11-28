@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Providers from "../components/Providers";
+import { ReduxProvider } from "@/redux/provider";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400"] });
 
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         {/* Provider for next-auth so yuou can use useSession() to get status and data */}
-        <Providers>{children}</Providers>
+        <Providers>
+          <ReduxProvider>{children}</ReduxProvider>
+        </Providers>
       </body>
     </html>
   );
