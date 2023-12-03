@@ -1,23 +1,22 @@
 "use client";
-import { useState } from "react";
+import { RefObject, useState } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
 import { useSession } from "next-auth/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "@/redux/store";
+import { setOptionsValue } from "@/redux/features/slice";
 
 export default function Options({
-  optionsValue,
+  selectAllRef,
   renderMainPage,
   tasks,
-  detailsValue,
-  moveValue,
   setNewTasksArray,
 }: {
-  optionsValue: boolean;
+  selectAllRef: RefObject<HTMLButtonElement>;
   renderMainPage: (arg: number | boolean, fromComp: string) => void;
   tasks: TaskObject[];
-  detailsValue: boolean;
-  moveValue: boolean;
   setNewTasksArray: React.Dispatch<React.SetStateAction<TaskObject[]>>;
 }) {
   let [completeButton, setCompleteButton] = useState(true);
@@ -91,6 +90,12 @@ export default function Options({
     }
   };
 
+  // Redux Toolkit
+  const dispatch = useDispatch<AppDispatch>();
+  const optionsValue = useAppSelector((state) => state.myReducer.optionsValue);
+  const moveValue = useAppSelector((state) => state.myReducer.moveValue);
+  const detailsValue = useAppSelector((state) => state.myReducer.detailsValue);
+
   return (
     <>
       {optionsValue ? (
@@ -116,7 +121,13 @@ export default function Options({
             onClick={() => {
               let selectedTasks = selectedCheck();
               if (selectedTasks.length) {
-                renderMainPage(!detailsValue, "details");
+                dispatch(
+                  setOptionsValue({
+                    optionsValue: optionsValue,
+                    moveValue: moveValue,
+                    detailsValue: !detailsValue,
+                  })
+                );
               }
             }}
           >
@@ -134,7 +145,23 @@ export default function Options({
           </button>
           <button
             className=" text-black bg-green-500 rounded-md"
-            onClick={() => renderMainPage(false, "options")}
+            onClick={() => {
+              dispatch(
+                setOptionsValue({
+                  optionsValue: false,
+                  moveValue: moveValue,
+                  detailsValue: false,
+                })
+              );
+              tasks.map((taskObject) => {
+                taskObject.selected = false;
+              });
+              if (selectAllRef?.current) {
+                selectAllRef.current.innerHTML = "Select All";
+                selectAllRef.current.classList.remove("bg-red-500");
+                selectAllRef.current.classList.add("bg-green-500");
+              }
+            }}
           >
             Selecting
           </button>
@@ -144,14 +171,30 @@ export default function Options({
           {moveValue ? (
             <button
               className=" text-white col-span-1 bg-red-500 rounded-md"
-              onClick={() => renderMainPage(false, "move")}
+              onClick={() =>
+                dispatch(
+                  setOptionsValue({
+                    optionsValue: optionsValue,
+                    moveValue: false,
+                    detailsValue: detailsValue,
+                  })
+                )
+              }
             >
               Moving...
             </button>
           ) : (
             <button
               className=" text-white col-span-1  bg-green-500 rounded-md"
-              onClick={() => renderMainPage(true, "move")}
+              onClick={() =>
+                dispatch(
+                  setOptionsValue({
+                    optionsValue: optionsValue,
+                    moveValue: true,
+                    detailsValue: detailsValue,
+                  })
+                )
+              }
             >
               Move
             </button>
@@ -170,7 +213,15 @@ export default function Options({
           </button>
           <button
             className=" text-white col-span-1 bg-green-500 rounded-md"
-            onClick={() => renderMainPage(true, "options")}
+            onClick={() =>
+              dispatch(
+                setOptionsValue({
+                  optionsValue: true,
+                  moveValue: moveValue,
+                  detailsValue: detailsValue,
+                })
+              )
+            }
           >
             Select
           </button>

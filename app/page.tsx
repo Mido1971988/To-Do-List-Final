@@ -11,7 +11,7 @@ import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
-import { setValue } from "../redux/features/slice";
+import { setOptionsValue } from "../redux/features/slice";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import AllTasks from "@/components/AllTasks";
 
@@ -20,12 +20,10 @@ export default function Home() {
   let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
 
   // Hooks for options.tsx
-  let [optionsValue, setOptionsValue] = useState(false);
-  let [moveValue, setMoveValue] = useState(false);
-  let [detailsValue, setDetailsValue] = useState(false);
+  // let [detailsValue, setDetailsValue] = useState(false);
 
   // Hook of Select All Button
-  let [selectAllValue, setSelectAllValue] = useState(true);
+  // let [selectAllValue, setSelectAllValue] = useState(true);
 
   // Hook to Delete Tasks
   let [updateDeleted, setUpdateDeleted] = useState(0);
@@ -171,25 +169,23 @@ export default function Home() {
       let filteredCompletedTasksArray = noOfCompleted(newTasksArray);
       setcompletedArray(filteredCompletedTasksArray);
     } else if (mission === "details" && typeof arg === "boolean") {
-      setDetailsValue(arg);
+      // setDetailsValue(arg);
     } else if (mission === "options" && typeof arg === "boolean") {
       if (!arg && selectAllRef.current?.innerHTML === "Deselect All") {
         selectAllRef.current.innerHTML = "Select All";
-        setSelectAllValue(true);
+        setOptionsValue({
+          optionsValue: optionsValue,
+          moveValue: moveValue,
+          detailsValue: detailsValue,
+        });
         tasksArrayObjects.map((taskObject) => (taskObject.selected = false));
       }
       if (!tasksArrayObjects.length) {
-        setOptionsValue(false);
         toast.error("No Tasks To Select !", {});
-      } else {
-        setOptionsValue(arg);
       }
     } else if (mission === "move" && typeof arg === "boolean") {
       if (!tasksArrayObjects.length) {
-        setMoveValue(false);
         toast.error("No Tasks To Move !");
-      } else {
-        setMoveValue(arg);
       }
     } else if (mission === "moveUp" && typeof arg === "number") {
       tasksArrayObjects.map((task, indx) => {
@@ -256,22 +252,28 @@ export default function Home() {
       return;
     }
     if (e?.currentTarget.innerHTML === "Select All") {
+      if (!optionsValue) return;
       e.currentTarget.innerHTML = "Deselect All";
+      e.currentTarget.classList.remove("bg-green-500");
+      e.currentTarget.classList.add("bg-red-500");
       tasksArrayObjects.map((taskObject) => (taskObject.selected = true));
-      setSelectAllValue(!selectAllValue);
-      if (!optionsValue) setOptionsValue(true);
+      setNewTasksArray(tasksArrayObjects);
     } else if (e?.currentTarget.innerHTML === "Deselect All") {
       e.currentTarget.innerHTML = "Select All";
+      e.currentTarget.classList.remove("bg-red-500");
+      e.currentTarget.classList.add("bg-green-500");
       tasksArrayObjects.map((taskObject) => {
         taskObject.selected = false;
       });
-      setDetailsValue(false);
-      setSelectAllValue(!selectAllValue);
+      setNewTasksArray(tasksArrayObjects);
     }
   };
 
+  // Redux Toolkit
   const dispatch = useDispatch<AppDispatch>();
-  const reduxState = useAppSelector((state) => state.myReducer.value);
+  const optionsValue = useAppSelector((state) => state.myReducer.optionsValue);
+  const moveValue = useAppSelector((state) => state.myReducer.moveValue);
+  const detailsValue = useAppSelector((state) => state.myReducer.detailsValue);
 
   return (
     <>
@@ -279,10 +281,7 @@ export default function Home() {
       <ServerButton />
 
       {/* To Do List Title */}
-      <h1
-        onClick={() => dispatch(setValue("777"))}
-        className=" text-red-600 text-[40px] font-black font-serif text-center mt-5 max-sm:text-[24px]"
-      >
+      <h1 className=" text-red-600 text-[40px] font-black font-serif text-center mt-5 max-sm:text-[24px]">
         To Do List
       </h1>
 
@@ -326,9 +325,7 @@ export default function Home() {
       <div className="grid grid-cols-2 w-11/12 m-auto mt-5 gap-20 pl-5 pr-5 max-sm:text-[12px]">
         <button
           ref={selectAllRef}
-          className={`text-white col-span-1 rounded-md ${
-            selectAllValue ? "bg-green-500" : "bg-red-500"
-          }`}
+          className={`text-white col-span-1 rounded-md bg-green-500 `}
           onClick={selectAllFunc}
         >
           Select All
@@ -343,7 +340,13 @@ export default function Home() {
             if (confirm("Are You Sure Delete All Tasks ?")) {
               setcompletedArray([]);
               setNewTasksArray([]);
-              setOptionsValue(false);
+              dispatch(
+                setOptionsValue({
+                  optionsValue: false,
+                  moveValue: false,
+                  detailsValue: false,
+                })
+              );
               selectAllFunc();
             } else {
               return;
@@ -373,22 +376,14 @@ export default function Home() {
 
       {/* Options */}
       <Options
-        optionsValue={optionsValue}
+        selectAllRef={selectAllRef}
         renderMainPage={renderMainPage}
         tasks={tasksArrayObjects}
-        detailsValue={detailsValue}
         setNewTasksArray={setNewTasksArray}
-        moveValue={moveValue}
       />
 
       {/* All Tasks */}
-      <AllTasks
-        tasks={tasksArrayObjects}
-        renderMainPage={renderMainPage}
-        optionsValue={optionsValue}
-        detailsValue={detailsValue}
-        moveValue={moveValue}
-      />
+      <AllTasks tasks={tasksArrayObjects} renderMainPage={renderMainPage} />
 
       {/* needed for Toast */}
       <ToastContainer hideProgressBar draggable={false} />

@@ -1,19 +1,19 @@
 import { TaskObject } from "@/types/TaskObject.types";
 import NewTask from "./NewTask";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "@/redux/store";
 
 export default function AllTasks({
   tasks,
   renderMainPage,
-  optionsValue,
-  detailsValue,
-  moveValue,
 }: {
   tasks: TaskObject[];
   renderMainPage: (arg: number | boolean, mission: string) => void;
-  optionsValue: boolean;
-  detailsValue: boolean;
-  moveValue: boolean;
 }) {
+  // Redux Toolkit
+  const optionsValue = useAppSelector((state) => state.myReducer.optionsValue);
+  const moveValue = useAppSelector((state) => state.myReducer.moveValue);
+  const detailsValue = useAppSelector((state) => state.myReducer.detailsValue);
   return (
     <>
       <div className=" flex flex-col items-center justify-center w-screen gap-1 mt-5 ">

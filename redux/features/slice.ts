@@ -1,18 +1,29 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+type InitialState = {
+  optionsValue: boolean;
+  moveValue: boolean;
+  detailsValue: boolean;
+};
 const initialState = {
-  value: "999",
+  optionsValue: false,
+  moveValue: false,
+  detailsValue: false,
 };
 
 export const mySlice = createSlice({
   name: "mySlice",
   initialState,
   reducers: {
-    setValue: (state, action: PayloadAction<string>) => {
-      return { value: action.payload };
+    setOptionsValue: (state, action: PayloadAction<InitialState>) => {
+      return {
+        optionsValue: action.payload.optionsValue,
+        moveValue: action.payload.moveValue,
+        detailsValue: action.payload.detailsValue,
+      };
     },
   },
 });
 
-export const { setValue } = mySlice.actions;
+export const { setOptionsValue } = mySlice.actions;
 export default mySlice.reducer;

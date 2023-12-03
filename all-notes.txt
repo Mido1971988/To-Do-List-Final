@@ -33016,7 +33016,7 @@ but in nextjs by default will combine those 2 fetches to one fetch.
         * Automatically set up the Redux DevTools Extension connection
         * Call createStore to create a Redux store using that root reducer and those configuration options
 
-    - CeateSlice :
+    - CreateSlice :
         A function that accepts an initial state, an object of reducer functions, 
         and a "slice name", and automatically generates action creators and action types that correspond to the reducers and state.
     
