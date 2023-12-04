@@ -1,7 +1,6 @@
 import { TaskObject } from "@/types/TaskObject.types";
 import NewTask from "./NewTask";
-import { useDispatch } from "react-redux";
-import { AppDispatch, useAppSelector } from "@/redux/store";
+import { useAppSelector } from "@/redux/store";
 
 export default function AllTasks({
   tasks,

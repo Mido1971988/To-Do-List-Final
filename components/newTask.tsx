@@ -15,6 +15,7 @@ export default function NewTask({
   moveValue: boolean;
 }) {
   let [selectValue, setSelectValue] = useState<boolean>(taskObject.selected);
+  let [editValue, setEditValue] = useState<string | null>(null);
   let taskTextRef = useRef<HTMLDivElement>(null);
 
   // to re-render if you clicked on Select All Button
@@ -40,17 +41,7 @@ export default function NewTask({
       renderMainPage(Date.now(), "completed");
     } else if (e.target.innerHTML === "Edit") {
       let newText = prompt("Editing The Task...");
-      if (newText) {
-        if (taskTextRef.current?.innerHTML) {
-          taskTextRef.current.innerHTML = newText;
-          taskObject.text = newText;
-          taskObject.edited = true;
-          taskObject.editedTime = new Date()
-            ?.toString()
-            ?.match(/\w+ \d+ \d+ \d+:\d+:\d+/gi)
-            ?.join("");
-        }
-      }
+      if (newText) setEditValue(newText);
     } else if (moveValue && e.target.classList.contains("up")) {
       taskObject.up = true;
       renderMainPage(Date.now(), "moveUp");
@@ -59,6 +50,7 @@ export default function NewTask({
       renderMainPage(Date.now(), "moveDown");
     }
   };
+
   return (
     <>
       {taskObject.selected && detailsValue ? (
@@ -111,7 +103,7 @@ export default function NewTask({
             }`}
           ></div>
           <div ref={taskTextRef} className=" text-black col-span-3 leading-7">
-            {taskObject.text}
+            {editValue ? editValue : taskObject.text}
           </div>
           <button
             className={`${

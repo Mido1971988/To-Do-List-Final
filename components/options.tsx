@@ -1,5 +1,5 @@
 "use client";
-import { RefObject, useState } from "react";
+import { useState } from "react";
 import { TaskObject } from "@/types/TaskObject.types";
 import { useSession } from "next-auth/react";
 import { ToastContainer, toast } from "react-toastify";
@@ -9,12 +9,10 @@ import { AppDispatch, useAppSelector } from "@/redux/store";
 import { setOptionsValue } from "@/redux/features/slice";
 
 export default function Options({
-  selectAllRef,
   renderMainPage,
   tasks,
   setNewTasksArray,
 }: {
-  selectAllRef: RefObject<HTMLButtonElement>;
   renderMainPage: (arg: number | boolean, fromComp: string) => void;
   tasks: TaskObject[];
   setNewTasksArray: React.Dispatch<React.SetStateAction<TaskObject[]>>;
@@ -22,12 +20,26 @@ export default function Options({
   let [completeButton, setCompleteButton] = useState(true);
   let { data: session, status } = useSession();
 
+  // Redux Toolkit
+  const dispatch = useDispatch<AppDispatch>();
+  const optionsValue = useAppSelector((state) => state.myReducer.optionsValue);
+  const moveValue = useAppSelector((state) => state.myReducer.moveValue);
+  const detailsValue = useAppSelector((state) => state.myReducer.detailsValue);
+
   // to Check no. of selected tasks
   let selectedCheck = () => {
     let selectedTasks = tasks.filter((task) => {
       if (task.selected) return true;
     });
-    if (selectedTasks.length === 0) renderMainPage(false, "details");
+    if (selectedTasks.length === 0) {
+      dispatch(
+        setOptionsValue({
+          optionsValue: optionsValue,
+          moveValue: moveValue,
+          detailsValue: false,
+        })
+      );
+    }
     return selectedTasks;
   };
 
@@ -90,12 +102,6 @@ export default function Options({
     }
   };
 
-  // Redux Toolkit
-  const dispatch = useDispatch<AppDispatch>();
-  const optionsValue = useAppSelector((state) => state.myReducer.optionsValue);
-  const moveValue = useAppSelector((state) => state.myReducer.moveValue);
-  const detailsValue = useAppSelector((state) => state.myReducer.detailsValue);
-
   return (
     <>
       {optionsValue ? (
@@ -153,14 +159,7 @@ export default function Options({
                   detailsValue: false,
                 })
               );
-              tasks.map((taskObject) => {
-                taskObject.selected = false;
-              });
-              if (selectAllRef?.current) {
-                selectAllRef.current.innerHTML = "Select All";
-                selectAllRef.current.classList.remove("bg-red-500");
-                selectAllRef.current.classList.add("bg-green-500");
-              }
+              renderMainPage(false, "options");
             }}
           >
             Selecting
@@ -186,15 +185,19 @@ export default function Options({
           ) : (
             <button
               className=" text-white col-span-1  bg-green-500 rounded-md"
-              onClick={() =>
+              onClick={() => {
+                if (!tasks.length) {
+                  toast.error("No Tasks To Move!!");
+                  return;
+                }
                 dispatch(
                   setOptionsValue({
                     optionsValue: optionsValue,
                     moveValue: true,
                     detailsValue: detailsValue,
                   })
-                )
-              }
+                );
+              }}
             >
               Move
             </button>
@@ -213,15 +216,19 @@ export default function Options({
           </button>
           <button
             className=" text-white col-span-1 bg-green-500 rounded-md"
-            onClick={() =>
+            onClick={() => {
+              if (!tasks.length) {
+                toast.warn("Add Tasks First!");
+                return;
+              }
               dispatch(
                 setOptionsValue({
                   optionsValue: true,
                   moveValue: moveValue,
                   detailsValue: detailsValue,
                 })
-              )
-            }
+              );
+            }}
           >
             Select
           </button>

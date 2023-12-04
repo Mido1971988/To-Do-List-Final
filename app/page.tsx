@@ -19,11 +19,8 @@ export default function Home() {
   // Hook for tasks
   let [newTasksArray, setNewTasksArray] = useState<TaskObject[]>([]);
 
-  // Hooks for options.tsx
-  // let [detailsValue, setDetailsValue] = useState(false);
-
   // Hook of Select All Button
-  // let [selectAllValue, setSelectAllValue] = useState(true);
+  let [selectAllValue, setSelectAllValue] = useState(true);
 
   // Hook to Delete Tasks
   let [updateDeleted, setUpdateDeleted] = useState(0);
@@ -163,31 +160,22 @@ export default function Home() {
 
   // Re-render Page.tsx Component
   let renderMainPage = (arg: number | boolean, mission: string) => {
-    if (mission === "deleteTask" && typeof arg === "number") {
+    if (typeof arg === "number" && mission === "deleteTask") {
       setUpdateDeleted(arg);
-    } else if (mission === "completed" && typeof arg === "number") {
+    } else if (typeof arg === "number" && mission === "completed") {
       let filteredCompletedTasksArray = noOfCompleted(newTasksArray);
       setcompletedArray(filteredCompletedTasksArray);
-    } else if (mission === "details" && typeof arg === "boolean") {
-      // setDetailsValue(arg);
-    } else if (mission === "options" && typeof arg === "boolean") {
-      if (!arg && selectAllRef.current?.innerHTML === "Deselect All") {
-        selectAllRef.current.innerHTML = "Select All";
-        setOptionsValue({
-          optionsValue: optionsValue,
-          moveValue: moveValue,
-          detailsValue: detailsValue,
+    } else if (typeof arg === "boolean" && mission === "options") {
+      if (!arg && !selectAllValue) {
+        selectAllFunc();
+      } else if (!arg && selectAllValue) {
+        tasksArrayObjects.map((taskObject) => {
+          taskObject.selected = false;
         });
-        tasksArrayObjects.map((taskObject) => (taskObject.selected = false));
       }
-      if (!tasksArrayObjects.length) {
-        toast.error("No Tasks To Select !", {});
-      }
-    } else if (mission === "move" && typeof arg === "boolean") {
-      if (!tasksArrayObjects.length) {
-        toast.error("No Tasks To Move !");
-      }
-    } else if (mission === "moveUp" && typeof arg === "number") {
+    } else if (typeof arg === "number" && mission === "loading") {
+      setLoading(arg);
+    } else if (typeof arg === "number" && mission === "moveUp") {
       tasksArrayObjects.map((task, indx) => {
         if (indx === 0) task.up = false;
         if (task.up) {
@@ -199,7 +187,7 @@ export default function Home() {
         }
         setNewTasksArray([...tasksArrayObjects]);
       });
-    } else if (mission === "moveDown" && typeof arg === "number") {
+    } else if (typeof arg === "number" && mission === "moveDown") {
       tasksArrayObjects.map((task, indx) => {
         if (indx === tasksArrayObjects.length - 1) task.down = false;
         if (task.down) {
@@ -211,8 +199,6 @@ export default function Home() {
         }
         setNewTasksArray([...tasksArrayObjects]);
       });
-    } else if (mission === "loading" && typeof arg === "number") {
-      setLoading(arg);
     }
   };
 
@@ -246,26 +232,20 @@ export default function Home() {
   };
 
   // Select All on click Function
-  let selectAllFunc = (e: React.MouseEvent | null = null) => {
+  let selectAllFunc = () => {
     if (!tasksArrayObjects.length) {
       toast.error("No Tasks to Select !");
       return;
     }
-    if (e?.currentTarget.innerHTML === "Select All") {
+    if (selectAllValue) {
       if (!optionsValue) return;
-      e.currentTarget.innerHTML = "Deselect All";
-      e.currentTarget.classList.remove("bg-green-500");
-      e.currentTarget.classList.add("bg-red-500");
       tasksArrayObjects.map((taskObject) => (taskObject.selected = true));
-      setNewTasksArray(tasksArrayObjects);
-    } else if (e?.currentTarget.innerHTML === "Deselect All") {
-      e.currentTarget.innerHTML = "Select All";
-      e.currentTarget.classList.remove("bg-red-500");
-      e.currentTarget.classList.add("bg-green-500");
+      setSelectAllValue(false);
+    } else if (!selectAllValue) {
       tasksArrayObjects.map((taskObject) => {
         taskObject.selected = false;
       });
-      setNewTasksArray(tasksArrayObjects);
+      setSelectAllValue(true);
     }
   };
 
@@ -325,10 +305,12 @@ export default function Home() {
       <div className="grid grid-cols-2 w-11/12 m-auto mt-5 gap-20 pl-5 pr-5 max-sm:text-[12px]">
         <button
           ref={selectAllRef}
-          className={`text-white col-span-1 rounded-md bg-green-500 `}
+          className={`text-white col-span-1 rounded-md ${
+            selectAllValue ? "bg-green-500" : "bg-red-500"
+          }  `}
           onClick={selectAllFunc}
         >
-          Select All
+          {selectAllValue ? "Select All" : "Deselect All"}
         </button>
         <button
           className="text-white col-span-1 bg-red-500 rounded-md"
@@ -376,7 +358,6 @@ export default function Home() {
 
       {/* Options */}
       <Options
-        selectAllRef={selectAllRef}
         renderMainPage={renderMainPage}
         tasks={tasksArrayObjects}
         setNewTasksArray={setNewTasksArray}
