@@ -22,6 +22,7 @@ const ServerButton = () => {
         clicked ? "text-black " : "text-white bg-green-500 "
       }`}
       onClick={handleServer}
+      disabled={clicked}
     >
       {clicked
         ? serverStatus
