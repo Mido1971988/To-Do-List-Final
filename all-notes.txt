@@ -4906,9 +4906,9 @@ Steps of for loop
 
 //----Limitaion of Arrow Function---- (later after finish JS course)
 // * Does not have its own bindings to this or super, and should not be used as methods.
-// * Does not have new.target keyword.
+// * Does not have new.target keyword.
 // * Not suitable for call, apply and bind methods, which generally rely on establishing a scope.
-// * Can not be used as constructors.
+// * Can not be used as constructors.
 // * Can not use yield, within its body.
 // * Does not have arguments object
 // * Can not return object because JS will be confused between {} of function and {} of object
@@ -8095,8 +8095,8 @@ console.log(iterator.next().value);
 /* The for...in iterates over all enumerable properties of an object. 
 It doesn’t iterate over a collection such as Array, Map or Set.
 Unlike the for...in loop, the for...of iterates a collection, 
-rather than an object. In fact, the for...of iterates over elements 
-of any collection that has the [Symbol.iterator] property.
+rather than an object. In fact, the for...of iterates over elements 
+of any collection that has the [Symbol.iterator] property.
 */
 
 // --------------for...of loop vs for...in loop and iterable vs enumerable-----------
@@ -13466,10 +13466,10 @@ So inside constructor function this === {}. While, when defining object literal 
 
 * Behind the scenes, JavaScript creates a new function Person() and an anonymous object that can be referenced via the prototype property
 * And the anonymous object (Person.prototype) has the constructor property that references the Person() function
-* the JavaScript engine creates a new object named p1 (instance) and links the p1 object to the Person.prototype object via the prototype linkage:
+* the JavaScript engine creates a new object named p1 (instance) and links the p1 object to the Person.prototype object via the prototype linkage:
 
-The __proto__ is pronounced as dunder proto. The __proto__ is an accessor property of the Object.prototype object. It exposes the internal prototype linkage ( [[Prototype]]) of an object through which it is accessed.
-However, it may be deprecated in favor of Object.getPrototypeOf() in the future. Therefore, you should never use the __proto__ in your production code.
+The __proto__ is pronounced as dunder proto. The __proto__ is an accessor property of the Object.prototype object. It exposes the internal prototype linkage ( [[Prototype]]) of an object through which it is accessed.
+However, it may be deprecated in favor of Object.getPrototypeOf() in the future. Therefore, you should never use the __proto__ in your production code.
 
 Another popular way to get the prototype linkage is when the Object.getPrototypeOf() method is not available is via the constructor property as follows
 
@@ -13572,7 +13572,7 @@ The greet() method of the p1 object shadows the greet() method of the prototype 
 //   /*
 // [1] Create Empty Object
 // [2] assign the New Object to this Context (this = {}) 
-// [3] links the new object to the User.prototype object via the prototype linkage
+// [3] links the new object to the User.prototype object via the prototype linkage
 // */
 //   this.name = name;
 //   /* 
@@ -14085,7 +14085,7 @@ This enables a Web page to update just part of a page without disrupting
 what the user is doing.
 * Update a web page without reloading the page
 * Request data from a server - after the page has loaded
-* Receive data from a server  - after the page has loaded
+* Receive data from a server  - after the page has loaded
 * Send data to a server - in the background
 
 Despite its name, XMLHttpRequest can be used to retrieve any type of data, not just XML.
@@ -16341,7 +16341,7 @@ Calling the bound function generally results in the execution of its wrapped fun
 // Implicit binding occurs when dot notation is used to invoke a function ( obj.func()).
 
 // [2] Explicit Binding
-// Explicit binding of this occurs when .call(), .apply(), or .bind() are used on a function (obj.func.call(anotherObj)).
+// Explicit binding of this occurs when .call(), .apply(), or .bind() are used on a function (obj.func.call(anotherObj)).
 
 /* 
 This is all about where a function is invoked. 
@@ -16393,7 +16393,7 @@ we can't eyeball it. We have to go back and find where this is bound.
 // Each key-value pair is added to the new Map.
 
 let map = new Map([[ 1, 'one' ],[ 2, 'two' ]])
-console.log(map) // Map(2) {1 => 'one', 2 => 'two'}
+console.log(map) // Map(2) {1 => 'one', 2 => 'two'}
 
 let obj = {
   prop1 : "D",
@@ -16694,7 +16694,7 @@ function Func2 (){
 }
 
 let myFunc = new Func()
-console.log(myFunc) // Func {a: 1}
+console.log(myFunc) // Func {a: 1}
 console.log(myFunc instanceof Func) // true
 
 let myFunc2 = new Func2()
@@ -17753,9 +17753,9 @@ number > 0 sort element1 before element2 | number < 0 sort element1 before eleme
 // Custom Sorting solve this problem
 // let nums = [44,91,34,12,19,100]
 // let sortedNums = nums.sort()
-// console.log(sortedNums) // (6) [100, 12, 19, 34, 44, 91]
+// console.log(sortedNums) // (6) [100, 12, 19, 34, 44, 91]
 // let customSorted = nums.sort((a,b)=>a-b)
-// console.log(customSorted) // (6) [12, 19, 34, 44, 91, 100]
+// console.log(customSorted) // (6) [12, 19, 34, 44, 91, 100]
 
 // ---------------------------flat() with level -----------------
 //Array.prototype.flat() to flat multi dimension array
@@ -21977,8 +21977,8 @@ number you can get is 1 milisecond but with performance.now() you can get 0.0000
 -performance.mark("name of mark ") like performance.now() but you don't have to assign
 performance.now() to variables and substract to get difference between 2 performance.now()
 just make 2 performance.mark() and give each one an unique name then use performance.measure()
-to get a PerformanceMeasure Object which has a lot of properties like startTime of first performance.mark()
-and duration property (difference between 2 performance.mark()) 
+to get a PerformanceMeasure Object which has a lot of properties like startTime of first performance.mark()
+and duration property (difference between 2 performance.mark()) 
 
 -performance.getEntries() => array of all performance and you can get specific one by name or type
  */
@@ -30565,7 +30565,7 @@ Creating React App (two options npx or npm):
 
 
 notes:
-[1] Routing : is a technology for switching between different UI views, based on the changes of the current URL
+[1] Routing : is a technology for switching between different UI views, based on the changes of the current URL
 [2] Rich EcoSystem : the interesting features and libraries that are available to use with React
 [3] component Based Architecture : let you to break down the Application into small encapsulated parts then you can compose them and you has the ability also to reuse these components
 [4] Declarative : Tell the React what you want and will build the actual UI
@@ -30698,7 +30698,7 @@ LifeCycle Methods :
         * is a static method that is called just before render() method in both mounting and updating phase in React. 
         It takes updated props and the current state as arguments. 
         We have to return an object(the updated state object) or null to indicate that nothing has changed.
-                      
+                      
         (c) render 
             * The only required Method
             * Do not : Change the state or interact with DOM or make AJAX Calls
@@ -31357,13 +31357,13 @@ then add the number as argument to action creator function then this number will
 * if the user try to write wrong route you can add <Route path='*' element={<NoMatch/>}/> in App.js to route the user to NoMatch page
  - note : path='*' means any path not exist in Routes
 
-* nested Routes :  you can easily nest <Route><Route/></Route> see Products.js 
-    - note : do not forget to import import { Link, Outlet } from 'react-router-dom' and use Outlet component inside Products.js
+* nested Routes :  you can easily nest <Route><Route/></Route> see App.js and Products.js 
+    - note : do not forget to import { Link, Outlet } from 'react-router-dom' and use Outlet component inside Products.js
     An <Outlet> should be used in parent route elements to render their child route elements. This allows nested UI to show up when child routes are rendered
 
 * index Route : if you want to render child nested component automatically when parent render you can use 
-    <Route index element={<FeaturedProducts/>}/> with index instead of path prop now when go to / products will 
-    render product parent and FeaturedProducts child
+    <Route index element={<FeaturedProducts/>}/> with index instead of path prop now when go to /products will 
+    render product parent and FeaturedProducts child and url will be /products not /products/feature
     - note : Difference between adding <Route path="/users/admin" element /> and <Route path="user" element><Route path="admin" element/></Route>
     is nested child will render under parent so on webpage you will see both parent and child 
     but incase path="/users/admin" you will see only admin page without users page
@@ -31379,6 +31379,8 @@ then add the number as argument to action creator function then this number will
 * useSearchParams Hook see(Users.js) : 
     [1] import { useSearchParams } from 'react-router-dom'
     [2] const [searchParams, setSearchParams] = useSearchParams() ( same concept of useState Hook)
+    note : setSearchParams({filter : active}) will add search param filter=active to url 
+    and you can check the if the url has a search param by using searchParams.get("filter") 
 
 * Relative Links see(Products.js) : 
     <Link to='featured'>Featured</Link>
@@ -31390,6 +31392,7 @@ then add the number as argument to action creator function then this number will
     [1] import React from 'react'
     [2] const LazyAbout = React.lazy(() => import('./components/About'))
     [3] <React.Suspense fallback='Loading...'><LazyAbout /></React.Suspense>
+    * note : to understand lazy (https://mikeguoynes.medium.com/the-ultimate-guide-to-react-lazy-loading-4cacd8bd3cf0)
 
 * Authentication and protected Routes
     https://youtu.be/X8eAbu1RWZ4
@@ -31416,6 +31419,7 @@ then add the number as argument to action creator function then this number will
         - Accessor : the name of column inside JSON file
         * You can choose what columns you want to extract from JSON file you should not extract all columns from JSON file
         * useMemo hook to ensure data doesn’t recreated every render
+        If we didn't use React.useMemo, the table would think it was receiving new data on every render and attempt to recalculate a lot of logic every single time. Not cool!
     [3] Use the data and columns defined to create a table instance 
         -using useTable Hook from react-table (in BasicTable.js )
     [4] Define a basic table structure using plain HTML
@@ -31432,8 +31436,9 @@ then add the number as argument to action creator function then this number will
     now you can pass column.getSortByToggleProps() as an argument to ...column.getHeaderProps() in <th> inside <thead> so will add props related to sorting features on this column 
 
 * Formatting : 
-    - react table needs a proper date format ( ISO ) to support sorting features so JSON file data format is ISO
-    but we can change UI Format to user after filter
+    - react table needs a proper date format ( ISO ) to support sorting features 
+    JSON file has data format ( ISO )
+    but we can change UI Format (dd/mm/yyyy) to user after Sorting
 
     -To format data in column you can : 
         Add cell after header , footer and accessor in column.js 
@@ -31456,7 +31461,7 @@ then add the number as argument to action creator function then this number will
     [2] Column filter : for specific column
         - useFilters hook : you can add it as 2nd argument to useTable hook 
         - Add ColumnFilter component (Filter: ColumnFilter) to every column in columns.js
-        - column.render('Filter') in FilteringTable.js
+        - column.render('Filter') in FilteringTable.js means will render ColumnFilter component ( from columns.js)
 
     * note : if you do not need to add (Filter: ColumnFilter) to every column you can use defaultColumn (dont forget to add it as an argument to useTable hook)will add it automatically to each column
     * useAsyncDebounce : incase of big data for better performance recommended to use useAsyncDebounce hook 
@@ -31485,6 +31490,7 @@ then add the number as argument to action creator function then this number will
 
 * Row Selection :
     - useRowSelect hook : you can add it as 2nd argument to useTable hook so you can destructure selectedFlatRows
+    - add arrow function to return array of selected Rows
 
 * Column Order (in ColumnOrder.js) :
     - useColumnOrder hook : you can add it as 2nd argument to useTable hook so you can destructure setColumnOrder method from the useTable Hook
@@ -31495,7 +31501,7 @@ then add the number as argument to action creator function then this number will
     - add getToggleHideAllColumnsProps if you want to hide all columns
     - add column.getToggleHiddenProps() if you want to hide one column only
 
-* Sticky Columns  (in StickyColumns.js):
+* Sticky Columns  (in StickyTable.js):
     - install package ( npm i react-table-sticky )
     - install package ( npm i styled-components )
     - useBlockLayout, useSticky hooks : you can add them as 2nd argument to useTable hook
@@ -31504,20 +31510,25 @@ then add the number as argument to action creator function then this number will
 -----------------------
 
 * Storybook : is an isolated development environment and playground for UI Component ( create component independently ) 
-
+when you work with a team and you want to try and see component away from your project or you want to show it to a client
+* Note : better to watch Videos not explained here well .
  
 * Install storybook package: 
 - npx create-react-app react-storybook-v6
 - npx sb init
 
-* In main.js in .storybook folder there is () that means will search for any file called .stories.js and will search inside this file for default export and named exports and run them so we don’t add button component to App.js
+* in Button.stories.js export default = { title : "Button" , component : Button } 
+title is the name of story will be shown on the left side , component Button from Button.js
+
+* In main.js in .storybook folder there is *.stories.@(js|jsx|ts|tsx) that means will search for any file called .stories.js 
+and will search inside this file for default export and named exports and run them so we don’t add button component to App.js
 
 
 * You can change story name like in ( Input.stories.js) Small.storyName = “Small Input”
 
-* If you want to sort stories alphabetically you can copy options object from stories docs and paste it in preview.js 
+* If you want to sort stories alphabetically you can copy options object from stories docs and paste it in preview.js .storybook folder 
 
-* You can merge stories in one story ( story within story ) like in ( Subscription.stories.js ) added Primary from input.stories and Large from Button.stories to Subsriptions.Stories.js
+* You can merge stories in one story ( story within story ) like in ( Subscription.stories.js ) import Primary from input.stories and Large from Button.stories to Subsriptions.Stories.js
 
 * Args in(Button.stories.js): 
     - Args can be used to dynamically change props, slots, styles, inputs, etc. It allows Storybook and its addons to live edit components
@@ -31541,7 +31552,7 @@ then add the number as argument to action creator function then this number will
 * Theming : 
     - install Chakra UI Packages : npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
     - same concept of decorators you wrap stories with theme (like wrap stories with <Center></Center> in Button.stories.js)
-    to add global decorators : 
+    to add global decorators in preview.js ( in V6): 
         decorators: [(Story) => (
                 <ThemeProvider theme={theme}>
                     <CSSReset />
@@ -31550,7 +31561,7 @@ then add the number as argument to action creator function then this number will
                     </Box>
                 </ThemeProvider>
                 )] 
-                in preview.js
+                
 
     * note : <Box m="4"> to add margin to the button    
              <CSSReset/> to add CSS from Chakra UI Packages
@@ -31577,7 +31588,7 @@ then add the number as argument to action creator function then this number will
         [2] add "@storybook/addon-a11y" in main.js
 
 * Environment Variable : 
-    [1] STORYBOOK_ in package.json file in scripts ("storybook": "STORYBOOK_THEME=dark storybook dev -p 6006",)
+    [1] STORYBOOK_ in package.json file in scripts ("storybook": "STORYBOOK_THEME=dark && storybook dev -p 6006",)
     [2] access it by (process.env.STORYBOOK_THEME)
     * note in window add (set STORYBOOK_THEME=dark &&) in mac without (set and &&)
 
@@ -31596,7 +31607,7 @@ npm i formik
 and accepts argument object and this object can has  properties like  :
 [1] intialValues : and value of this property is an object and properties of this object should be the same name attribute in input element 
 [2] onSubmit : and value of this property is a function which accept form state object (formik.values )  as an argument and this function automatically executes once you press on Submit Button
-[3] validate : and value of this property is a function which accept form state object (formik.values )  as an argument and return error object which is change errors proberty inside formik object
+[3] validate : and value of this property is a function which accept form state object (formik.values )  as an argument and return error object which change errors proberty inside formik object
 
 * useFormik hook will return an object which is has handleChange method (formik.handleChange() or formik.handleSubmit() ) and value (formik.values) .  Like setState and state in useState Hook 
 
@@ -31611,6 +31622,7 @@ and accepts argument object and this object can has  properties like  :
 
 * instead of adding [ onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.name}] to each input element in Form 
 we can add {...formik.getFieldProps("name")} (argument is the value of name attribute) and will add onChange , onBlur and value attribute automatically
+in Video 12 in React Formik tutorial
 
 * Formik component is a substitute for useFormik hook and steps are (in YoutubeFrom.js) : 
 [1] import Formik instead of useFormik
@@ -31637,12 +31649,12 @@ we can add {...formik.getFieldProps("name")} (argument is the value of name attr
 * Field component render as input element but if you want Field component to render as text area you should add (as=‘textarea’ or component =‘textarea) prop to it 
 
 * Render Props :
-    In YoutubeForm.js you can easily add field component and will render as input element but we have another option 
+    In YoutubeForm.js you can easily add Field component and will render as input element but we have another option 
     to add function as a children to this Field component and this function returns input element ( but you have to link to to formik by add {...field} or {...form.getFieldProps("address")})
     This function accepts props and this props object has (field , form , meta ) properties : 
         [1] field prop : values of this prop is object of ( name , onBlur , onChange and value ) to help you to manage state 
         [2] form prop : values of this prop is the same formik object that return from useFormik hook 
-        [3] gives you information if field visited or not , error exists or not and value ( used to render error messages ) 
+        [3] meta prop : gives you information if field visited or not , error exists or not and value ( used to render error messages ) 
 
 * ErrorMessage render text not html element to force ErrorMessage to render html element instead of just rendering a text : 
     [1] add  component=‘div’ prop 
@@ -31667,13 +31679,13 @@ we can add {...formik.getFieldProps("name")} (argument is the value of name attr
         [1] import FieldArray from 'formik'
         [2] add the array to initialValue (phNumbers: [""])
         [3] in FieldArray add name="phNumber"
-        [4] use Render Props pattern ( children is a function and inside this function will accept fieldArrayProps as parameter and 
-            destructure form , remove , push from fieldArrayProps then will destructure values from form then will destructure phNumbers array from values ) 
+        [4] use Render Props pattern ( children is a function and inside this function will accept fieldArrayProps as parameter ( code inside FieldArray parent Component is return props.children({form , remove , push}) ) 
+            and destructure form , remove , push from fieldArrayProps then will destructure values from form then will destructure phNumbers array from values ) 
         [5] map on phNumbers array to render Field Component and you can add more element to phNumbers array using push method (that will render more Field component) 
             and you can remove element from phNumbers array (that will remove Field Component)
 
 * Field Component vs FastField (address vs address2 fields in YoutubeForm.js): 
-    * Any changes to form ( like typing inside Field input component will render all Filed Components in the form to re-render ) 
+    * Any changes to form ( like typing inside Field input component will render all Field Components in the form to re-render ) 
     FastField Component will solve this problem will re-render FastField component only when you type in it not when you type in any other Field
 
 
@@ -31686,25 +31698,26 @@ we can add {...formik.getFieldProps("name")} (argument is the value of name attr
 
 * Field level Validation (for specific Field) : 
     - before in OldYoutubeForm.js we used two ways for validation [1] validate [2] validateSchema Yup liberary
-    and both of validations ways are top level whichs means can validate the selected Field from validate function or validateSchema object
+    and both of validations ways are top level whichs means can validate all Field from validate function or validateSchema object
     - steps for Field level Validation : 
         [1] define validate function (like validate function in top level validation ... the function (validateComments) accept value of comments Field as parameter )
         [2] add validate property to comments Field and assign validateComments function to this prop 
 
 * Manually triger validation : 
-    [1] you needs to use render props pattern form entire From : children of Formik Component is a function whichs accept 
+    [1] you needs to use render props pattern on entire From : children of Formik Component is a function whichs accept 
     formik object as parameter ( with formik object we can control manual triger of validation) values of this parameter is the same formik object that return from useFormik hook and also same value of form object in render props in address field
-    [2] add onClick event and the function is formik.validateField() ... empty paramter means will validate all field or you can write which field you want to validate 
+    [2] add onClick event and the function is formik.validateField() ... empty paramter means will validate all field (or use formik.validateForm()) or you can write which field you want to validate 
         (but also will not give you the Error because we have 2 conditions to give you error 1st condition is didn't write anything in Field and 2nd condition is touching the Field (click inside and then click outside))
     [3] add onClick event and the function is formik.setTouched() ... here you should write which fields you want to set as touched fields empty parameter not allowed
         (now will give you the Error)
+        (or use formik.setFieldTouched("comments") and add name of field as parameter)
 
 * How to Stop Submit : [1] when form is invalid [2] during submitting process
     [1] when form is invalid :
         (a) formik.isValid : readonly prop true if error object is empty 
         (b) add disabled={!formik.isValid} to submit button so the button will be disabled when form is invalid
         - note : if you want to disable the submit button once page mount you can add validateOnMount prop to Formik Field
-        - formik.dirty : boolean value prop true if you change a value of any field (not blur should type inisde the field and change the value)
+        - formik.dirty : boolean value prop true if you change a value of any field from initail values (not blur should type inisde the field and change the value)
 
     [2] during submitting process (means when you press on submit we want to disable submit button till submition process to server finish then we can submit again to prevent double submittion at the same time)
         (a) formik.isSubmitting : boolean value true if submission is in process
@@ -31715,8 +31728,8 @@ we can add {...formik.getFieldProps("name")} (argument is the value of name attr
 * Load saved Data as initial values of the From : 
     [1] import {useState} from 'react' 
     [2] destructure const [formValues, setFormValues] = useState(null) then initialValues={formValues || initialValues}
-    [3] create savedData object (that will replace initial values of the Form)
-    [4] add enableReinitialize prop to Formik Component to enables the form to change initial values
+    [3] create savedData object (that set values of the Form using setFormValues when click load button)
+    [4] add enableReinitialize prop to Formik Component to enables the form to change initial values after initialized once and state changed (formValues)
     [5] add button load data and onClick event and inside this event setFormValues(savedValues) (to simulate API Call)
 
 * Reset Data in the Form : 
@@ -31725,13 +31738,13 @@ we can add {...formik.getFieldProps("name")} (argument is the value of name attr
 
 * formik videos end at video 30 ... from video 31 we are building an Example and use what we learned
 
-* ChakraInput library in(chakraInput.js): 
+* ChakraInput library in(chakraInput.js) to take care of styling: 
     -Form control component has isInvalid prop if false will not render FormErrorMessage component 
     -Benefits of using ChakraInput Library is no need to write css or create TextError.js and pass it as component prop inside ErrorMessage 
 
 -----------------------------
 Benefits of React styled component : 
-* Automatic critical CSS ( inject css styling only to the components will render 
+* Automatic critical CSS ( inject css styling only to the components will render )
 * No class name ( if you have two css files maybe will one will override the other if you use same class name like styles.css and app.css ) 
 * Easier deletion on css style ( because each css style is linked to specific component so when you delete a component will delete automatically it’s css style ) 
 * Dynamic CSS styling (means now css style can be different according to props of component )
@@ -33016,7 +33029,7 @@ but in nextjs by default will combine those 2 fetches to one fetch.
         * Automatically set up the Redux DevTools Extension connection
         * Call createStore to create a Redux store using that root reducer and those configuration options
 
-    - CreateSlice :
+    - CeateSlice :
         A function that accepts an initial state, an object of reducer functions, 
         and a "slice name", and automatically generates action creators and action types that correspond to the reducers and state.
     

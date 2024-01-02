@@ -14,6 +14,15 @@ import { useDispatch } from "react-redux";
 import { setOptionsValue } from "../redux/features/slice";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import AllTasks from "@/components/AllTasks";
+import {
+  Formik,
+  Form,
+  Field,
+  ErrorMessage,
+  FormikHelpers,
+  FieldProps,
+} from "formik";
+import * as Yup from "yup";
 
 export default function Home() {
   // Hook for tasks
@@ -231,6 +240,36 @@ export default function Home() {
     setNewTasksArray(tasksArrayObjects);
   };
 
+  // type for Fromik
+  interface MyFormValues {
+    inputTask: string;
+  }
+
+  // onSbmit Function for Formik
+  const onSubmitFormik = (
+    values: { inputTask: string },
+    submitProps: FormikHelpers<MyFormValues>
+  ) => {
+    let taskObject = {
+      id: Date.now(),
+      time: new Date()
+        ?.toString()
+        ?.match(/\w+ \d+ \d+ \d+:\d+:\d+/gi)
+        ?.join(""),
+      text: values.inputTask ? values.inputTask : "no Input",
+      done: false,
+      delete: false,
+      edited: false,
+      editedTime: "",
+      selected: false,
+      up: false,
+      down: false,
+    };
+    submitProps.resetForm();
+    tasksArrayObjects.unshift(taskObject);
+    setNewTasksArray(tasksArrayObjects);
+  };
+
   // Select All on click Function
   let selectAllFunc = () => {
     if (!tasksArrayObjects.length) {
@@ -254,6 +293,14 @@ export default function Home() {
   const optionsValue = useAppSelector((state) => state.myReducer.optionsValue);
   const moveValue = useAppSelector((state) => state.myReducer.moveValue);
   const detailsValue = useAppSelector((state) => state.myReducer.detailsValue);
+
+  // Formik
+  const initialValues = { inputTask: "" };
+
+  // Yup Validation
+  const validationSchema = Yup.object({
+    inputTask: Yup.string().required("Valid Task Required!"),
+  });
 
   return (
     <>
@@ -340,7 +387,48 @@ export default function Home() {
       </div>
 
       {/* Write your Task */}
-      <div className=" grid grid-cols-3 gap-4 w-11/12 m-auto mt-5 p-5 bg-slate-100 rounded-md max-sm:text-[12px]">
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmitFormik}
+        validationSchema={validationSchema}
+      >
+        <Form className="relative">
+          <div className=" grid grid-cols-3 gap-4 w-11/12 m-auto mt-5 p-5 bg-slate-100 rounded-md max-sm:text-[12px] ">
+            <Field id="inputTask" name="inputTask">
+              {(props: FieldProps) => {
+                const { field, form, meta } = props;
+                return (
+                  <input
+                    {...field}
+                    type="text"
+                    placeholder={
+                      meta.touched && meta.error
+                        ? meta.error
+                        : "Write your Task!"
+                    }
+                    className=" text-black outline-none col-span-2 rounded-md "
+                  ></input>
+                );
+              }}
+            </Field>
+            <button
+              className="text-white col-span-1 bg-green-500 rounded-md max-sm:text-[12px] max-sm:leading-6"
+              type="submit"
+            >
+              Add Task
+            </button>
+          </div>
+          <ErrorMessage name="inputTask">
+            {(error) => (
+              <div className="error text-red-500 absolute bottom-0 left-16">
+                {error}
+              </div>
+            )}
+          </ErrorMessage>
+        </Form>
+      </Formik>
+
+      {/* <div className=" grid grid-cols-3 gap-4 w-11/12 m-auto mt-5 p-5 bg-slate-100 rounded-md max-sm:text-[12px]">
         <input
           id="inputTask"
           type="text"
@@ -354,7 +442,7 @@ export default function Home() {
         >
           Add Task
         </button>
-      </div>
+      </div> */}
 
       {/* Options */}
       <Options
