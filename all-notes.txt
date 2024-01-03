@@ -31753,9 +31753,14 @@ Benefits of React styled component :
 
 npm install styled-components
 
-Dynamic CSS : when you use a function inside Es6 template string this function will accept component prop as an argument ( like in Button.styles.js ) 
+* Steps ( like in Button.styles.js ) : 
+[1] import styled from "styled-components"
+[2] const StyledButton = styled.button`` (inside template literal add css styles)
+[3] you can use StyledButton Component as button with added css styles
 
 Extending styles : you can reuse styles of one component and add extra styles to it ( like in Button.styles.js …. Const FancyButton = styled(styledButton) this means FancyButton will take styles of styledButton and then you can add extra style like linear-gradient)
+
+Dynamic CSS : when you use a function inside Es6 template string this function will accept component prop as an argument ( like in Button.styles.js ) 
 
 Pseudo classes : 
 Add (&:hover ) ( like in Button.styles.js ) 
@@ -31763,7 +31768,11 @@ Add (&:hover ) ( like in Button.styles.js )
 Passed props to be element attributes :
 When you add type=‘submit’ to StyledButton will be passed automatically to button element  ( like in Button.styles.js ) 
 
-Adding attributes: you can add attribute to component by using attrs constructor and this constructor accepts an object as argument or accept a function which is returns an object and this function accepts props as an argument ( like in Button.styles.js ) 
+Adding attributes: instead of adding props to every component you can add attribute to component by using attrs constructor and this constructor accepts object or function : 
+[1] object (has the attribute ) as argument 
+[2] accept a function which is returns an object (has the attribute ) and this function accepts props as an argument ( like in Button.styles.js ) 
+* note : we use function 
+if we need to get other props from the component
 
 Animation : 
 Import { keyframes } from ‘styled-component’
@@ -31799,7 +31808,7 @@ https://mui.com/material-ui/customization/default-theme/
 - note : if you want to take default css styles from material ui default theme but you want to render different html element you can add variant prop for styles and component prop for html element ( like in h4 element in MuiTypography.tsx) 
 - gutterbottom prop to add bottom margin to the element and depends on variant if variant is h1 will have bigger margin than h6 
 
-* Button : 
+* Button  ( like in MuiButton.tsx): 
 - variant text : (no need for user attention ) used for exp. in footer button and see more buttons
 - Variant contained: (need for user attention ) used for exp. Login or register buttons 
 - Variant outlined: ( in between contained and text we need attention but not too much ) used for exp. Cancel or go back buttons 
@@ -31814,14 +31823,15 @@ https://mui.com/material-ui/customization/default-theme/
 - disableElevation prop to disable shadow on the button
 - disableRipple prop to disable ripple effect when you click on the button
 
-* ButtonGroup component: 
+* ButtonGroup component ( like in MuiButton.tsx): 
 - if you want to create group of buttons beside each others better to wrap buttons components with ButtonGroup component 
 - add variant prop ( or any prop ) to ButtonGroup component not to buttons component 
 - Orientation prop vertical to render buttons vertically 
 - Arial-label prop for accessibility 
+- note : UI of ButtonGroup component better than Stack component
 
-* ToggleButtonGroup : 
-- onChange event : 2nd argument of onChange event is values Depending on how your togglebuttons are set up
+* ToggleButtonGroup ( like in MuiButton.tsx) : 
+- onChange event : 2nd argument of onChange event is values of value prop of ToggleButton Component ( single value if you add exclusive prop if not will be array of values)
 - exclusive prop : if you want toggle only one button not selecting multiple buttons
 
 * TextField ( in MuiTextField.tsx) :  
