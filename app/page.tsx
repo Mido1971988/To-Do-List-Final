@@ -247,8 +247,8 @@ export default function Home() {
 
   // onSbmit Function for Formik
   const onSubmitFormik = (
-    values: { inputTask: string },
-    submitProps: FormikHelpers<MyFormValues>
+    values: MyFormValues,
+    helpers: FormikHelpers<MyFormValues>
   ) => {
     let taskObject = {
       id: Date.now(),
@@ -265,7 +265,7 @@ export default function Home() {
       up: false,
       down: false,
     };
-    submitProps.resetForm();
+    helpers.resetForm();
     tasksArrayObjects.unshift(taskObject);
     setNewTasksArray(tasksArrayObjects);
   };
@@ -387,6 +387,7 @@ export default function Home() {
       </div>
 
       {/* Write your Task */}
+      {/* Using Formik */}
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmitFormik}
@@ -403,7 +404,7 @@ export default function Home() {
                     type="text"
                     placeholder={
                       meta.touched && meta.error
-                        ? meta.error
+                        ? "Please write a Valid Task!"
                         : "Write your Task!"
                     }
                     className=" text-black outline-none col-span-2 rounded-md "
@@ -417,17 +418,18 @@ export default function Home() {
             >
               Add Task
             </button>
+            <ErrorMessage name="inputTask">
+              {(error) => (
+                <div className="error text-red-500 absolute bottom-0">
+                  {error}
+                </div>
+              )}
+            </ErrorMessage>
           </div>
-          <ErrorMessage name="inputTask">
-            {(error) => (
-              <div className="error text-red-500 absolute bottom-0 left-16">
-                {error}
-              </div>
-            )}
-          </ErrorMessage>
         </Form>
       </Formik>
 
+      {/* Without using Formik */}
       {/* <div className=" grid grid-cols-3 gap-4 w-11/12 m-auto mt-5 p-5 bg-slate-100 rounded-md max-sm:text-[12px]">
         <input
           id="inputTask"

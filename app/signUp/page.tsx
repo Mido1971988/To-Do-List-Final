@@ -7,6 +7,30 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  Formik,
+  Form,
+  Field,
+  ErrorMessage,
+  FormikHelpers,
+  FieldProps,
+} from "formik";
+import * as Yup from "yup";
+
+// Formik
+const initialValues = { username: "", password: "" };
+
+// type for Fromik
+interface MyFormValues {
+  username: string;
+  password: string;
+}
+
+// Yup Validation
+const validationSchema = Yup.object({
+  username: Yup.string().required("Required!"),
+  password: Yup.string().required("Required!"),
+});
 
 type Props = {
   className?: string;
@@ -77,13 +101,123 @@ const signUp = (props: Props) => {
       .catch((err) => console.log("Server not Running...."));
   };
 
+  // to Handle Click on Sign In Button with Formik
+  let onSubmitFormik = (
+    values: MyFormValues,
+    helpers: FormikHelpers<MyFormValues>
+  ) => {
+    fetch("api/listOfUsers")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to Fetch");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        let foundUser = res.filter(
+          (user: { id: string; name: string; password: string }) =>
+            user.name === values.username
+        );
+        if (!foundUser.length) {
+          let newUser = {
+            id: Date.now().toString(),
+            name: values.username,
+            password: values.password,
+          };
+          res.push(newUser);
+          fetch("api/listOfUsers", {
+            method: "post",
+            mode: "cors",
+            headers: {
+              Accept: "text/plain",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(res),
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed");
+              return res.text();
+            })
+            .then((res) => {
+              console.log(res);
+              router.push("/");
+            })
+            .catch((err) => console.log(err));
+        } else {
+          toast.error(`User ${foundUser[0].name} Already Exists`);
+          router.push("/");
+        }
+      })
+      .catch((err) => console.log("Server not Running...."));
+  };
+
   return (
     <Modal>
       <div className={props.className}>
         <div className="bg-gradient-to-b  from-slate-50 to-slate-200 p-2 text-center text-slate-600">
           Sign Up Form
         </div>
-        <form onSubmit={onSubmit} className="p-2 flex flex-col gap-3">
+
+        {/* With Formik */}
+        <Formik
+          initialValues={initialValues}
+          onSubmit={onSubmitFormik}
+          validationSchema={validationSchema}
+        >
+          <Form className="p-2 flex flex-col gap-3">
+            <Field name="username" id="username">
+              {(props: FieldProps) => {
+                const { field, form, meta } = props;
+                return (
+                  <div className=" relative">
+                    <InputBox field={field} labelText="User Name" />
+                    <ErrorMessage name="username">
+                      {(error) => (
+                        <div className="error text-red-500 absolute -bottom-4 text-xs right-0">
+                          {error}
+                        </div>
+                      )}
+                    </ErrorMessage>
+                  </div>
+                );
+              }}
+            </Field>
+            <Field name="password" id="password">
+              {(props: FieldProps) => {
+                const { field, form, meta } = props;
+                return (
+                  <div className=" relative">
+                    <InputBox field={field} labelText="Password" />
+                    <ErrorMessage name="password">
+                      {(error) => (
+                        <div className="error text-red-500 absolute -bottom-4 right-0 text-xs">
+                          {error}
+                        </div>
+                      )}
+                    </ErrorMessage>
+                  </div>
+                );
+              }}
+            </Field>
+            <div className="flex items-center justify-center mt-2 gap-2">
+              <button
+                type="submit"
+                className="w-28 border border-green-600 text-center py-2 rounded-md text-white-600 transition hover:bg-green-600 hover:text-white hover:border-transparent active:scale-95"
+              >
+                Sign Up
+              </button>
+              <Link
+                href={props.callbackUrl ?? "/"}
+                className="w-28 border border-red-600 text-center py-2 rounded-md text-red-600 transition hover:bg-red-600 hover:text-white hover:border-transparent active:scale-95"
+              >
+                Cancel
+              </Link>
+            </div>
+          </Form>
+        </Formik>
+
+        {/* wihout Formik */}
+        {/* <form onSubmit={onSubmit} className="p-2 flex flex-col gap-3">
           <InputBox
             name="username"
             labelText="User Name"
@@ -111,7 +245,7 @@ const signUp = (props: Props) => {
               Cancel
             </Link>
           </div>
-        </form>
+        </form> */}
       </div>
     </Modal>
   );

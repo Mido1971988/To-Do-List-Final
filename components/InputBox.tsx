@@ -1,12 +1,14 @@
+import { FieldInputProps } from "formik";
 import React from "react";
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   labelText?: string;
   error?: string;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement>;
+  field?: FieldInputProps<any>;
 }
 
-const InputBox = ({ labelText, error, inputRef, ...props }: Props) => {
+const InputBox = ({ labelText, error, inputRef, field, ...props }: Props) => {
   return (
     <div className={props.className}>
       <label
@@ -20,6 +22,7 @@ const InputBox = ({ labelText, error, inputRef, ...props }: Props) => {
               ${
                 error ? " border-red-500   animate-shake" : "border-slate-400"
               }`}
+        {...field}
         {...props}
       ></input>
     </div>
