@@ -87,6 +87,9 @@ const Login = (props: Props) => {
     values: MyFormValues,
     helpers: FormikHelpers<MyFormValues>
   ) => {
+    // to Clear Field after submit or failed of Authentication
+    helpers.resetForm();
+
     // To Check if failed to fecth from external Api or your own Api Endpoint
     let usersResponse;
     try {
@@ -130,19 +133,25 @@ const Login = (props: Props) => {
         <p className="bg-red-100 text-red-600 text-center p-2">{unAuth}</p>
       )}
 
+      {/* if you want to disable autofocus (because of using Modal) wrap Form Component with <div tabIndex={3}></div> */}
+
       {/* With Formik */}
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmitFormik}
         validationSchema={validationSchema}
       >
-        <Form className="p-2 flex flex-col gap-3">
+        <Form className="p-2 flex flex-col gap-6">
           <Field name="username" id="username">
             {(props: FieldProps) => {
               const { field, form, meta } = props;
               return (
                 <div className=" relative">
-                  <InputBox field={field} labelText="User Name" />
+                  <InputBox
+                    field={field}
+                    labelText="User Name"
+                    inputRef={userInput}
+                  />
                   <ErrorMessage name="username">
                     {(error) => (
                       <div className="error text-red-500 absolute -bottom-4 text-xs right-0">
@@ -159,7 +168,11 @@ const Login = (props: Props) => {
               const { field, form, meta } = props;
               return (
                 <div className=" relative">
-                  <InputBox field={field} labelText="Password" />
+                  <InputBox
+                    field={field}
+                    labelText="Password"
+                    inputRef={passInput}
+                  />
                   <ErrorMessage name="password">
                     {(error) => (
                       <div className="error text-red-500 absolute -bottom-4 right-0 text-xs">

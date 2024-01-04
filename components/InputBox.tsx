@@ -1,5 +1,6 @@
+import { TextField } from "@mui/material";
 import { FieldInputProps } from "formik";
-import React from "react";
+import React, { useState } from "react";
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   labelText?: string;
@@ -11,7 +12,16 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 const InputBox = ({ labelText, error, inputRef, field, ...props }: Props) => {
   return (
     <div className={props.className}>
-      <label
+      {/* With Material UI */}
+      <TextField
+        label={labelText}
+        className={`w-full`}
+        inputRef={inputRef}
+        {...field}
+      ></TextField>
+
+      {/* Without Material UI */}
+      {/* <label
         className={`block text-slate-600  mb-2 text-xs lg:text-sm xl:text-base `}
       >
         {labelText}
@@ -24,7 +34,7 @@ const InputBox = ({ labelText, error, inputRef, field, ...props }: Props) => {
               }`}
         {...field}
         {...props}
-      ></input>
+      ></input> */}
     </div>
   );
 };

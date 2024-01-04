@@ -31875,7 +31875,7 @@ https://mui.com/material-ui/customization/default-theme/
 - The Box component serves as a wrapper component for most of the CSS utility needs
 - component prop : if you want to render box to other html element like span
 - sx prop : if you want to add css styles 
-- You can add css directly to Box component no need for sx prop ( but those css styles must be supported by Mui ) ( there is shortcuts for some css styles like bgcolor = background color 
+- You can add css directly to Box component no need for sx prop ( but those css styles must be supported by Mui ) ( there is shortcuts for some css styles like bgcolor = background color )
 
 * Stack component ( in MuiLayout.tsx) :
 - is a wrapper component
