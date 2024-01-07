@@ -164,56 +164,70 @@ const signUp = (props: Props) => {
           onSubmit={onSubmitFormik}
           validationSchema={validationSchema}
         >
-          <Form className="p-2 flex flex-col gap-3">
-            <Field name="username" id="username">
-              {(props: FieldProps) => {
-                const { field, form, meta } = props;
-                return (
-                  <div className=" relative">
-                    <InputBox field={field} labelText="User Name" />
-                    <ErrorMessage name="username">
-                      {(error) => (
-                        <div className="error text-red-500 absolute -bottom-4 text-xs right-0">
-                          {error}
-                        </div>
-                      )}
-                    </ErrorMessage>
-                  </div>
-                );
-              }}
-            </Field>
-            <Field name="password" id="password">
-              {(props: FieldProps) => {
-                const { field, form, meta } = props;
-                return (
-                  <div className=" relative">
-                    <InputBox field={field} labelText="Password" />
-                    <ErrorMessage name="password">
-                      {(error) => (
-                        <div className="error text-red-500 absolute -bottom-4 right-0 text-xs">
-                          {error}
-                        </div>
-                      )}
-                    </ErrorMessage>
-                  </div>
-                );
-              }}
-            </Field>
-            <div className="flex items-center justify-center mt-2 gap-2">
-              <button
-                type="submit"
-                className="w-28 border border-green-600 text-center py-2 rounded-md text-white-600 transition hover:bg-green-600 hover:text-white hover:border-transparent active:scale-95"
-              >
-                Sign Up
-              </button>
-              <Link
-                href={props.callbackUrl ?? "/"}
-                className="w-28 border border-red-600 text-center py-2 rounded-md text-red-600 transition hover:bg-red-600 hover:text-white hover:border-transparent active:scale-95"
-              >
-                Cancel
-              </Link>
-            </div>
-          </Form>
+          <div tabIndex={3}>
+            <Form className="p-2 flex flex-col gap-6">
+              <Field name="username" id="username">
+                {(props: FieldProps) => {
+                  const { field, form, meta } = props;
+                  return (
+                    <div className=" relative">
+                      <InputBox
+                        field={field}
+                        labelText="User Name"
+                        isTouched={meta.touched && !meta.value}
+                      />
+                      {meta.touched && !meta.value ? (
+                        <ErrorMessage name="username">
+                          {(error) => (
+                            <div className="error text-red-500 absolute -bottom-4 text-xs right-0">
+                              {error}
+                            </div>
+                          )}
+                        </ErrorMessage>
+                      ) : null}
+                    </div>
+                  );
+                }}
+              </Field>
+              <Field name="password" id="password">
+                {(props: FieldProps) => {
+                  const { field, form, meta } = props;
+                  return (
+                    <div className=" relative">
+                      <InputBox
+                        field={field}
+                        labelText="Password"
+                        isTouched={meta.touched && !meta.value}
+                      />
+                      {meta.touched && !meta.value ? (
+                        <ErrorMessage name="username">
+                          {(error) => (
+                            <div className="error text-red-500 absolute -bottom-4 text-xs right-0">
+                              {error}
+                            </div>
+                          )}
+                        </ErrorMessage>
+                      ) : null}
+                    </div>
+                  );
+                }}
+              </Field>
+              <div className="flex items-center justify-center mt-2 gap-2">
+                <button
+                  type="submit"
+                  className="w-28 border border-green-600 text-center py-2 rounded-md text-white-600 transition hover:bg-green-600 hover:text-white hover:border-transparent active:scale-95"
+                >
+                  Sign Up
+                </button>
+                <Link
+                  href={props.callbackUrl ?? "/"}
+                  className="w-28 border border-red-600 text-center py-2 rounded-md text-red-600 transition hover:bg-red-600 hover:text-white hover:border-transparent active:scale-95"
+                >
+                  Cancel
+                </Link>
+              </div>
+            </Form>
+          </div>
         </Formik>
 
         {/* wihout Formik */}
