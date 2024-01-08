@@ -32916,8 +32916,6 @@ but in nextjs by default will combine those 2 fetches to one fetch.
         now we triggered revalidation so when new data added to server wil be shown on page with 1st refresh not 2nd refresh
         * note : On-demand revalidation used when you want only users who has secret token to see updated data
 
-
-
 * Data Mutation : 
     is a common side-effect in programming. 
     To mutate a variable once it has been defined means to alter its value.
@@ -32928,15 +32926,16 @@ but in nextjs by default will combine those 2 fetches to one fetch.
     [2] { revalidate :  0 } 
     [3] const revalidate = 0;
 
-
-* router.refresh() :
-    Send a new request to the server, refetch data and rerender the page 
-
 * Hard navigation vs Soft Navigation ?
     Hard navigation : 
         On navigation, the cache is invalidated and the server refetches data and re-renders the changed segments.
     Soft Navigation: 
         On navigation, the cache for changed segments is reused (if it exists), and no new requests are made to the server for data.
+
+* Partial re-render
+    when navigating between two sibling routes, /dashboard/settings and /dashboard/analytics, the settings and analytics pages will be rendered, and the shared dashboard layout will be preserved.
+    Without partial rendering, each navigation would cause the full page to re-render on the client. Rendering only the segment that changes reduces the amount of data transferred and execution time, leading to improved performance.
+    Browsers perform a "hard navigation" when navigating between pages. The Next.js App Router enables "soft navigation" between pages, ensuring only the route segments that have changed are re-rendered (partial rendering). This enables client React state to be preserved during navigation.
 
 - The push() and replace() methods will perform a soft navigation if the new route has been prefetched 
     ( for example when you check a box of todo list on item page and go back to home page by using push or replace method , 
@@ -32946,6 +32945,7 @@ but in nextjs by default will combine those 2 fetches to one fetch.
     
     * note : to check data mutation , router.refresh and Hard navigation & Soft Navigation check ToDoList project 
         and ToDoList Project needs json server , to create json server : ( npx json-server -w db.json -p 3500 -H 127.0.0.1 )
+    * note : router.refresh() with new version of nextjs Send a new request to the server, refetch data and rerender the page 
 
 
 - check Final Project 
