@@ -32710,11 +32710,16 @@ https://nextjs.org/docs
 * Metadata : is availabe at layout.tsx and each page can have layout.tsx file inside it you can add different Metadata ( you can also add Metadata at page.tsx)
 
 * loading : you can add loading.tsx file to any page folder and you will see it if page take too long for loading
+before in React we used suspense component 
+<Suspense fallback={<Loading/>}> <SomeComponent> </Suspense>
 
 * error handling : you can add error.tsx to any page folder and will render it when there is an error and will not crash all project
 
 * Routes : 
     just create folder and the name of folder will be the route name then add page.tsx file inside it
+    you have two options in ( users/[userId]) :
+    [1] use promise.all to wait for user name and posts
+    [2] await only user and use <Suspense> to show user name while waiting for Fetching Posts
 
 * Dynamic Routes : 
     just create a folder and the name of the folder between [] ( like [userId] inside users folder) :
