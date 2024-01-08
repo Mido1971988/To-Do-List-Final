@@ -32752,6 +32752,7 @@ before in React we used suspense component
 * in page.tsx in [userId] folder we fetched two times by invoking getUser() function two times 
 but in nextjs by default will combine those 2 fetches to one fetch.
 
+
 - Any <Link /> component will be prefetched by default
     For example : you have home page and have users page 
     When you at home page will not fetch the data untill you go to homepage\users from address bar in browser ( will download html file from server ) 
