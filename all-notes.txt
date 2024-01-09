@@ -31288,7 +31288,7 @@ if it returns a function then pass dispatch as an argument to that function.
     [2] import { createStore , applyMiddleware} from 'redux'
     [3] const store = createStore(rootReducer , applyMiddleware(logger)) in rootReducer.js
 
-* Steps of redux devtools extension : 
+* Steps of redux devtools extension to the Browser : 
     [1] npm install --save -redux-devtools-extension
     [2] import { composeWithDevTools } from 'redux-devtools-extension'
     [3] const store = createStore(rootReducer ,composeWithDevTools( applyMiddleware(logger)))
@@ -32948,38 +32948,51 @@ but in nextjs by default will combine those 2 fetches to one fetch.
     * note : router.refresh() with new version of nextjs Send a new request to the server, refetch data and rerender the page 
 
 
-- check Final Project 
-    * Difference between md (mark down )  and mdx ?
-        MDX allows you to use JSX in your markdown content. You can import components, such as interactive charts or alerts, and embed them within your content.
-        MDX doesn’t have a new or special syntax because it’s just a combination of Markdown and JSX in one place
+- check Final Project ( Lesson 12 ) :
 
-        If your Markdown or MDX files do not live inside your application, you can fetch them dynamically on the server ( like github repo api ) 
+* Markdown : 
+    is an easy-to-use simplified markup language that is an alternative to using HTML. 
+    and there are a lot of tools to convert it to HTML
+    see this video to understand Markdown ( https://youtu.be/f49LJV1i-_w?si=X1VsAD5rdGQIh0nO )
 
-        To access frontmatter outside of your MDX when passing parsefrontmatter: true, use the compileMdx method imported from next-mdx-remote/rsc
+* Frontmatter : 
+    Metadata for your Markdown
+    Variables that can later be injected into your components
+    Must be:
+        At the top of the file
+        Valid YAML
+        Between triple dashed lines
+
+* Difference between md (mark down )  and mdx ?
+    MDX allows you to use JSX in your markdown content. 
+    You can import components inside compileMDX() 
+    MDX doesn’t have a new or special syntax because it’s just a combination of Markdown and JSX in one place
+
+    If your Markdown or MDX files do not live inside your application, you can fetch them dynamically on the server ( like github repo api ) 
 
 
-    * Steps of usin mdx-remote : 
+* Steps of usin mdx-remote : 
 
-    [1] To install mdx remote ( npm i next-mdx-remote)
-    [2] import { compileMDX } from “next-mdx-remote/rsc”
-    [3] compileMDX accepts parameters ( source, options ) 
-    [4] destructure { frontmatter, content } = await compileMDX() 
-    [5] access data by frontmatter like ( frontmatter.title ) 
+[1] To install mdx remote ( npm i next-mdx-remote)
+[2] import { compileMDX } from “next-mdx-remote/rsc”
+[3] compileMDX accepts parameters ( source, components,  options )  (parsefrontmatter: true in options)
+[4] destructure { frontmatter, content } = await compileMDX() 
+[5] access data by frontmatter like ( frontmatter.title ) 
 
-    - note : Revalidate = 0 and generateStaticParams don’t mix because 0 means no-cache so no static pages
-    - note : github repo api 
-        https://api.github.com/repos/Mido1971988/test-blogposts/git/trees/master?recursive=1
-        [1] https://api.github.com/repos
-        [2] Mido1971988 ( your username )
-        [3] test-blogposts ( your repo name )
-        [4] git/trees
-        [5] master ( your branch name )
-        [6] ?recursive=1
-    - note : to revalidate you can use thunder client or you can write it on browser ( because url in browser is a GET request )
-        http://localhost:3000/api/revalidate?path=/&secret=DaveGrayTeachesCode  
-        [1] http://localhost:3000/api/revalidate ( revalidate location )
-        [2] path=/ ( / means home page)
-        [3] &secret=DaveGrayTeachesCode ( we added secret token to do revalidation only with this token)
+- note : Revalidate = 0 and generateStaticParams don’t mix because 0 means no-cache so no static pages
+- note : github repo api 
+    https://api.github.com/repos/Mido1971988/test-blogposts/git/trees/master?recursive=1
+    [1] https://api.github.com/repos
+    [2] Mido1971988 ( your username )
+    [3] test-blogposts ( your repo name )
+    [4] git/trees
+    [5] master ( your branch name )
+    [6] ?recursive=1
+- note : to revalidate you can use thunder client or you can write it on browser ( because url in browser is a GET request )
+    http://localhost:3000/api/revalidate?path=/&secret=DaveGrayTeachesCode  
+    [1] http://localhost:3000/api/revalidate ( revalidate location )
+    [2] path=/ ( / means home page)
+    [3] &secret=DaveGrayTeachesCode ( we added secret token to do revalidation only with this token)
 
 
 * Note : 
@@ -32995,10 +33008,12 @@ but in nextjs by default will combine those 2 fetches to one fetch.
         You can invoke Server Actions using the following methods:
             
             [1] Using action: React's action prop allows invoking a Server Action on a <form>element.
-                like in AddTodo2.tsx file we added attribute action={addTodo} to Form Element ( addTodo imported from actions.ts)
-            
+                like in AddTodo.tsx file we added attribute action={addTodo} to Form Element ( addTodo imported from actions.ts)
+                - Pass a Server Action to the action prop of form when the form is submitted. formData will be passed to the Server Action function as an argument so you can access the data submitted by the form
+                -  Passing a Server Action to <form action> allow users to submit forms without JavaScript enabled or before the code has loaded.
+
             [2] Using formAtion: React's formAction prop allows handling <button>, <input type="submit">, and <input type="image"> elements in a <form>
-                like in Todo2.tsx file we added atttribute formAction={async () => {
+                like in Todo.tsx file we added atttribute formAction={async () => {
                         'use server'
                         await deleteTodo(todo)
                     }}
@@ -33010,6 +33025,9 @@ but in nextjs by default will combine those 2 fetches to one fetch.
                 like in UpdateCheckbox.tsx file
                 - note : to be sure that method disable Progressive Enhancement , disable Javascript from browser and try 
                     to check any box so when you refresh the box will be unchecked because there is no JS to change it on server
+                - useTransition does not support Progressive Enhancement , why use it ? 
+                    you have access to isPending value to know data still changing on server or finished already
+                    const [ isPending , startTransition ] = useTransition()
 
 
 
@@ -33038,11 +33056,11 @@ but in nextjs by default will combine those 2 fetches to one fetch.
 [7] dispatch(logIn()) or dispatch(logOut()) onClick on Buttons
 [8] const username = useSelector((state) => state.auth.reducer.value.username)  (useSelector to get state and show it to User )
 * notes : 
-    - configureStore:
+    - configureStore ( all those steps done automatically for you):
         * Call combineReducers to combine your slices reducers into the root reducer function
         * Add the thunk middleware and called applyMiddleware
         * In development, automatically add more middleware to check for common mistakes like accidentally mutating the state
-        * Automatically set up the Redux DevTools Extension connection
+        * Automatically set up the Redux DevTools Extension connection to the Browser
         * Call createStore to create a Redux store using that root reducer and those configuration options
 
     - CeateSlice :
