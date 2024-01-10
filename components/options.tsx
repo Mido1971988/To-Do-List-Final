@@ -37,6 +37,7 @@ export default function Options({
           optionsValue: optionsValue,
           moveValue: moveValue,
           detailsValue: false,
+          // listOfUsers: [],
         })
       );
     }
@@ -132,6 +133,7 @@ export default function Options({
                     optionsValue: optionsValue,
                     moveValue: moveValue,
                     detailsValue: !detailsValue,
+                    // listOfUsers: [],
                   })
                 );
               }
@@ -157,6 +159,7 @@ export default function Options({
                   optionsValue: false,
                   moveValue: moveValue,
                   detailsValue: false,
+                  // listOfUsers: [],
                 })
               );
               renderMainPage(false, "options");
@@ -176,6 +179,7 @@ export default function Options({
                     optionsValue: optionsValue,
                     moveValue: false,
                     detailsValue: detailsValue,
+                    // listOfUsers: [],
                   })
                 )
               }
@@ -195,6 +199,7 @@ export default function Options({
                     optionsValue: optionsValue,
                     moveValue: true,
                     detailsValue: detailsValue,
+                    // listOfUsers: [],
                   })
                 );
               }}
@@ -226,6 +231,7 @@ export default function Options({
                   optionsValue: true,
                   moveValue: moveValue,
                   detailsValue: detailsValue,
+                  // listOfUsers: [],
                 })
               );
             }}

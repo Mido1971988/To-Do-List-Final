@@ -374,6 +374,7 @@ export default function Home() {
                   optionsValue: false,
                   moveValue: false,
                   detailsValue: false,
+                  // listOfUsers: [],
                 })
               );
               selectAllFunc();

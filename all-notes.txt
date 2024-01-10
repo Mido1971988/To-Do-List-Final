@@ -33069,7 +33069,17 @@ but in nextjs by default will combine those 2 fetches to one fetch.
     
     - useDispatch hook does not cause re-render but useSelector cause re-render
 
-    
+* Steps of using Async Reducer function  ( before we used thunk middleware but with configureStore it adds thunk middleware automatically for you and you need another approach) :
+    [1] import { createAsyncThunk } from "@reduxjs/toolkit";
+    [2] export const fetchUsers = createAsyncThunk(redux action type string , callBack function (argument , ThunkAPI) => {do you fetch  method here}) -- the argument is the argument passed in dispatch like (  dispatch(fetchUsers(argument))) 
+    [3] extraReducers: (builder) => { builder.addCase(fetchUsers.fulfilled , callBack function (state , action) => { here you can change state like -- state.listOfUsers = [...action.payload]})}
+    [4] dispatch(fetchUsers(argument))
+    [5] you can access state like before const listOfU = useAppSelector((state) => state.myReducer.listOfUsers);
+
+    * note : fetchUsers.fulfilled (fetch succeeded), fetchUsers.rejected (fetch rejected), fetchUsers.pending (still fetching) created automatically for you 
+    * note : redux action type string argument that passed to createAsyncThunk() you can access it from action.type in extraReducers  function 
+
+
 ***************************************** TailWind CSS *****************************************
 * Tailwind CSS :  is an open source CSS framework
 
