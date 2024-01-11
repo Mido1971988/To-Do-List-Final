@@ -33078,7 +33078,7 @@ but in nextjs by default will combine those 2 fetches to one fetch.
 
     * note : fetchUsers.fulfilled (fetch succeeded), fetchUsers.rejected (fetch rejected), fetchUsers.pending (still fetching) created automatically for you 
     * note : redux action type string argument that passed to createAsyncThunk() you can access it from action.type in extraReducers  function 
-
+ 
 
 ***************************************** TailWind CSS *****************************************
 * Tailwind CSS :  is an open source CSS framework
@@ -33134,17 +33134,22 @@ but in nextjs by default will combine those 2 fetches to one fetch.
         - another exp. you want to use specific color like #bada55 you have two options : 
             [a] mutate any color in module.exports={ theme : { colors:{ blue : "#bada55" }}}
             [b] or use [] like bg-[#bada55]
+            
     [4] extend in theme in tailwind.config.js: 
+        - extend not like mutate classes ... extend add new classes not overrivde classes in Tailwind
         - colors extend (Lesson05):  
-        Like papayawhip:{light:”” , DEFAULT:””, dark:””}
-        So you have 3 options : papayawhip-light , papayawhip-darker , papayawhip ( this means papayawhip-DEFAULT ) 
+            Like module.exports={ theme : {  extend : { colors : {  papayawhip:{light:”” , DEFAULT:””, dark:””} }}}}
+            So you have 3 options : papayawhip-light , papayawhip-darker , papayawhip ( this means papayawhip-DEFAULT ) 
         - keyframes and animation (Lesson04):  add animate-nameOfAnimation class to element
+            Like module.exports={ theme : {  keyframes : { "open-menu" : {} } , animation : { "open-menu : {} }}}}
 
 * directives in Tailwind : 
     [1] @apply : 
         use @apply to write tailwind css code inside class at input.css file and you can reuse
         this class name to different html elements instead of writing long tailwind css code 
         for each html element ( like header-directive in header in Lesson03)
+        .header-directive { bg-teal-700 text-white sticky top-0 z-10 }
+        so when you write header-directive class name will apply all this bg-teal-700 text-white sticky top-0 z-10 to the element
     
     [2] @layer :
         [a] solve the problem of order of overriding  
@@ -33164,12 +33169,16 @@ but in nextjs by default will combine those 2 fetches to one fetch.
         
         [b] CSS defined inside layers ,they'll be removed in the generated CSS (build/css/style.css) if not used.
 
-        [c] Wrapping any custom CSS with @layer also makes it possible to use modifiers with those rules, like hover: and focus: 
-            or responsive modifiers like md: and lg: ( like widescreen:section-min-height we used section-min-height with media query widescreen)
+        [c] Any custom styles you add to Tailwind with @layer will automatically support Tailwind’s modifier syntax for handling things like hover states, responsive breakpoints, dark mode, and more.: 
+            like md: and lg: ( like widescreen:section-min-height we used section-min-height with media query widescreen)
             * note : to understand how to customize media query visit ( https://tailwindcss.com/docs/screens )
 
 * if you want to add class to element from JS you should use @apply so you can use class name at JS file
     because you can't write tailwind classes inside hamburgerBtn.classList.toggle() ( like toggle-btn in main.js in Lesson04)
+
+* Media queries defined using the raw key will be output as-is, and the min and max keys will be ignored so you can add min width and height or add aspect ratio like widescreen : { "raw" : "(min-aspect-ratio : 3/2)" }. in tailwind.config.js in Lesson 05
+
+
 
 * Animation in tailwind : 
     [1] custom animation 
@@ -33247,290 +33256,6 @@ but in nextjs by default will combine those 2 fetches to one fetch.
     @content means that when you invoke mixin will write the content not when you create the mixin
 
 * Mixin with media quieries (check it on main.scss file)
-
-***************************************** NodeJS *****************************************
-
-* NodeJs :
-    - JS runtime environment ( execute JS code outside the browser)
-    - NodeJs is C++ program and needs V8 engine to understand JS code that’s why you will find V8 folder in dependencies 
-    - NodeJs is C++ program so you can combine between features in JS and Features in C++
-    - Lib folder in dependencies help developers to access C++ features from JS 
-    - In NodeJs you don’t have access to web Api
-
-* Difference between NodeJs and Vanilla Js : 
-[1] node runs on a server not in a browser 
-[2] the console is in terminal ( you can write node on terminal then you can write js code in terminal )
-[3] global object instead of window object 
-[4] commonJs Module instead of ES Module 
-[5] missing some JS Api like fetch
-
-* Modules :
-    A module is an encapsulated and reusable chunk of code that has its own context
-    In Node.js, each file is treated as a separate module
-    Types of Modules :
-        1.Local modules - Modules that we create in our application ( like commonJs and ES module)
-        2.Built-in modules - Modules that Node.js ships with out of the box
-        3.Third party modules - Modules written by other developers that we can use in our application
-
-* commonJs Module (require) : 
-    require() is a built-in function to include external modules that exist in separate files. 
-    require() statement basically reads a JavaScript file, executes it , 
-    and return the module.exports object. ( require("./add.js") has the value of module.exports = add; in add.js file )
-
-* Module Scope :
-    Each loaded module in Node.js is wrapped with an IIFE that provides private scoping of code
-    IIFE allows you to repeat variable or function names without any conflicts 
-    (batman.js and superman.js has same variable name (superhero) and no conflict when we used require in index.js)
-    * under the hood when you write require("./batman") and require("./superman") in index.js
-    node will wrap then with IIFE ( you can see exp. of wrapping like in iife.js)
-    * under the hood node inject 5 arguments (exports, require, module,__filename,__dirname ) when wrap module by iife
-
-* difference between module.exports and exports ?
-    module.exports is an object (which's returned from require() ) and exports just a reference to this object
-    
-    [1] when you write exports = superhero; in superman.js and try to console.log(require("./superman)) 
-        - module.exports = {};
-        - let exports = module.exports; now exports reference to module.exports object
-        - exports = superhero; now you overwrite exports and break the reference
-        - console.log(require("./superman)); will give you {}
-    [2]  when you write exports.superhero = superhero; in superman.js and try to console.log(require("./superman))
-        - module.exports = {}
-        - let exports = module.exports; now exports reference to module.exports object
-        - exports.superman = superhero; now same reference and you added superman property to same object
-        - console.log(require("./superman)); will give you {superman : "Superman"}
-    [3] when you write module.exports = superhero; in batman.js and try to console.log(require("./batman))
-        - module.exports = {}
-        - let exports = module.exports;
-        - module.exports = superhero;
-        - console.log(require("./superman)); will give you "Batman"
-
-
-* ES Module : 
-    if you want to use ES Module (export and import) instead of using commonJs ( module.exports and require())
-    name file extension mjs ( like main.mjs and math.mjs)
-
-* Importing JSON File : 
-    when you create JSON file ( data.json ) you can use require("./data") directly no need to add module.exports = data; in JSON file
-    and require will parse json data to js object automatically
-
-* watch mode in nodeJs :
-    supported from version 18 (node --watch file name)
-
-* built-n Module ( path , events , fs , stream , http )
-
-* Path check index.js
-
-* Events (Built-in) : 
-    steps : 
-    [1] import EventEmitter Class const EventEmitter = require("node:events");
-    [2] create emitter instance from EventEmitter Class ( emitter instance has on and emitt methods)
-    [3] emitter.on (like addEventListener )
-    [4] emitter.emitt ( like click or disptaching the event ) ( you can add arguments starting from 2nd parameters)
-
-* Extend with buil-in Event check index.js
-
-* To understand Character set , Encoding, Streams and buffer watch these Videos : 
-    https://youtu.be/0LYXkL0pr1M?si=-HtSPPEvMQqL6kz0
-    https://youtu.be/br8VB99qPzE?si=hzlOvXD3RO8_kPP2
-
-* fs(file system) ( check Exp. in index.js) :
-    * NodeJs has built-in Async methods ( like fs.readFile() or fs.writeFile() )  not like JS needs browsers or Web Api to do Async
-    * fs.writeFile() method by default will overwrite any content in file so we can add {flag: "a",}
-        to append to the file not to overwrite
-    * promise with fs : performance in regular fs is better than fs promise (check Exp. in index.js)
-    * fs.appendFile will create file if not exist the add text inside it 
-* Stream :
-    - is a sequence of data that is being moved from one point to another over time
-    - Stream is infact a built-in node module that inherits from the event emitter class 
-        that’s why readableStream has on method ( inherited it from event emitter class)
-
-    - Types of Streams
-        [1] Readable streams from which data can be read Ex: Reading from a file as readable stream
-        [2] Writable streams to which we can write data Ex: Writing to a file as writable stream
-        [3] Duplex streams that are both Readable and Writable Ex: Sockets as a duplex stream
-        [4] Transform streams that can modify or transform the data as it is written and read 
-            Ex: File compression where you can write compressed data and read de-compressed data to and from a file as a transform stream
-
-    - default chunk size if 64 bits but you can change this by addin highWaterMark: 2 (2bits) to options object 
-    - data event will be fired automatically ( no need to emitt it ) when data is received
-    - you can use pipe method instead of data event ( check exp. in index.js)
-    - chained pipe ( works only with specific destination stream types : readable , duplex or transform Streams)
-    
-* HTTP Module :
-    - HTTP module extend EventEmitter Class 
-    - const server = http.createServer((request , response) => {}) 
-        To create server and accept callback function as argument 
-        This callback function request event listener 
-        Means when the server get request this callback function will be executed
-    - server.listen() to tell server to start listening at which port 
-        and can accept 2nd argument as callback function which will be executed when server start listening 
-    - response.end() accepts only type string or an instance of Buffer or Uint8Array.
-        So we use JSON.stringify() and we should add {"Content-Type" : "application/json"}
-    - to send html response we should add {"Content-Type" : "text/html"}
-    - you can send whole html file as a response like res.end(fs.readFileSync("./index.html"))
-    - using pipe is better performance than fs.readFileSync
-        fs.createReadStream("./index.html").pipe(res) 
-        is better than 
-        res.end(fs.readFileSync("./index.html"))
-    - if you want to add dynamic html ( for exp. add name from server to html file before send it as response) ( you can't use here pipe)
-        [1] let html = fs.readFileSync("./index.html" , "utf-8")
-        [2] const name = "Soliman"
-        [3] html = html.replace("{{name}}" , name) // string replace method
-        [4] res.end(html)
-
-* Routing (check index.js)
-
-
-* Thread Pool
-    - when you try to do Async in NodeJs , NodeJs will try to do it using native Async method ( kernal ) in 
-        your operating system and if that not possible then will try to use Thread Pool 
-
-    - Libuv thread pool as the name indicates is literally a pool of threads, 
-    that NodeJS uses to offload time-consuming tasks ( like crypto.pbkdf2 ) 
-    and ensures the main thread is not blocked for a long time (Asynchronous)
-    
-    - videos to understand better :
-        https://youtu.be/I1sqnbJ1Fno?si=wCKSOM-EPqNCE610
-        https://youtu.be/I1sqnbJ1Fno?si=fLkMJOxOy7sXRr5z 
-
-    - you can change Thread pool size by ( process.env.UV_THREADPOOL_SIZE = 16;)
-        * note : each thread take one cpu core from your laptop 
-            for exp. if you have 4 cpu cores so for best performance make size of Thread pool to 4
-            if you make size of thread pool to 8 so each core will take 2 threads so will not give you best performance
-    - https.requesr is a network operation not CPU operation so will not use Thread pool will use native Async method
-        so no matter what is the Thread pool size if you make a request or 12 request all will be same time
-    
-* Event Loop ( see Experiment in event-loop.js): 
-    * note : see picture in 7:55 to understand event loop cycle ( https://youtu.be/L18RHG2DwwA?si=wt9JNr9wnrhR-nkf )
-    Order of Executions : 
-    1.Any callbacks in the micro task queues are executed. 
-        First, tasks in the nextTick queue and only then tasks in the promise queue
-    2.All callbacks within the timer queue are executed
-    3.Callbacks in the micro task queues if present are executed. 
-        Again, first tasks in the nextTick queue and then tasks in the promise queue
-    4.All callbacks within the l/O queue are executed
-    5.Callbacks in the micro task queues if present are executed. nextTick queue followed by
-        Promise queue.
-    6.All callbacks in the check queue are executed
-    7.Callbacks in the micro task queues if present are executed. 
-        Again, first tasks in the nextTick queue and then tasks in the promise queue
-    8.All callbacks in the close queue are executed
-    9.For one final time in the same loop, the micro task queues are executed. 
-        nextTick queue followed by promise queue.
-
-* npm :
-    - is a package manager for the JavaScript programming language maintained by npm
-    - npm registry is an online database of public and paid-for private packages
-    - Package.json is the central place to configure and describe how to interact with and run your application. It is used by the npm CLI (and yarn) to identify your project and understand how to handle the project's dependencies.
-    - Package.json file housed in the root directory of your project has name, version, description, and keywords, as well as dependencies and devDependencies.
-    - You have two options to create Package.json :
-        [1] manually by creating and writing the file
-        [2] by command (npm init )and then enter the detail , or by (npm init —yes )and will enter all details automatically 
-
-    - for Exp. we installed package ( upper-case ) and when you want to import methods from it we have two methods : 
-        [1] ES module : import { upperCase , localUpperCase } from "upper-case"
-        [2] commomJs :  const upperCase = require("upper-case").upperCase
-
-    - if you write module name in dependencies in package.json and you did not install it
-        when you write (npm install ) in terminal will automatically install any module written in dependencies
-        this is usefull if you clone a repo without node-modules folder juts write npm install in terminal
-        and node will read dependencies in package.json and will install all modules
-
-
-    - version of package is writter in 3 numbers (semantic version) ( x.y.z) ( x = main version , y = minor version , z = patch)
-        Versioning Rules : 
-            [1] When you fix a bug and the code stays backwards-compatible you increment the patch version.
-                For example 1.1.1 to 1.1.2
-            [2] When you add new functionality but the code still stays backwards-compatible, you increment the minor version
-                You also reset the patch version to zero
-                For example 1.1.1 to 1.2.0
-            [3] When you make changes and the code is no more backwards compatible, you increment the major version
-                You have to reset the minor and patch version to zero
-                For example 1.1.1 to 2.0.0
-            * note : in dependencies and devDependencies ^ means allow to update minor version or patch but not update major version
-            * note : in dependencies and devDependencies ~ means allow to update patch only
-            * note : in dependencies and devDependencies * (without numbers) means allow to update all ( latest version)
-            * note : to update packages in dependencies and devDependencies write npm update
-
-    - global package ( you can use it on terminal no need to import it in index.js to use it)
-        like nodemon package we installed it by ( sudo npm install -g nodemon ) ( nodemon like watch mode)
-        * note : use terminal not VSCode when you use sudo  
-            if you want to use VSCode edit sudoers file ( but will make computer slow so not recommended)
-            steps : 
-                [1] sudo nano /etc/sudoers 
-                [2] add this line ( %sudo   ALL=(ALL) NOPASSWD: ALL) ( becarfull after %sudo 2 tabs not space)
-        
-        * note : to remove global package ( npm uninstall -g nodemon  ) but this does not work for me so 
-            use these steps : 
-                [1] cd /usr/local/lib/node_modules
-                [2] sudo rm -rf nodemon
-
-    - scripts : a shortcut written to use on terminal   
-        for example instead of writting ( node index.js ) we can write in script ( "start" : "node index.js" )
-        then on terminal we can write npm run start instead of node index.js
-
-* difference between 
-    - DevDependencies are the packages that are required for development and testing purposes only. 
-    These packages are not required for the application to run properly, 
-    but they are needed for tasks such as building, testing, and linting the code.
-    to install package to dev add --save-d or -D (like -g means global package)
-
-    - Dependencies are the packages that are required for your application to run properly. 
-    These packages are installed when you run the npm install command. 
-
-* CLI ( command line interface) you can create your own program like npm or git :
-    - steps : 
-        [1] create package ( npm init )
-        [2] add (#!/usr/bin/env node) in index.js
-        [3] add "bin" : {"pokemon" : "index.js"} to package.json
-        [4] you can publish package to npm then install it or install it directly from computer
-            by (sudo npm install -g) in terminal will automatically install any package written in bin package.json
-            now when you write pokemon in terminal your program will run
-            * note : you should install fetch by ( npm install node-fetch@2 ) 
-                version 2 of node-fetch if you want to use commomJs 
-                if you want to use ES Module ( import ) use latest version
-        [5] if you want to pass an argument you can install yargs package ( npm install yargs)
-            then in terminal write argument like ( pokemon --pokemon=mew)
-        [6] if you want prompt user when the user start to run your package , you can use
-            inquirer package by ( npm install inquirer@8.2.5 ) version 8 because compatible with commomJs newer version compatible with ES Module
-        
-
-* The cluster module (cluster.js and no-cluster.js):
-    - provides a way of creating child processes that runs simultaneously and share the same server port. (bacause Node is single thread )
-    - Master and Workers : 
-        Master is only in charge of the workers 
-        Workers are in charge of handling incoming requests, reading files etc
-        Each worker gets its own event loop, memory, and V8 instance
-
-        steps : 
-            [1] const cluster = require("cluster");
-            [2] cluster.isMaster to check if Master is running so you can create workers by (cluster.fork();) 
-        * note : each worker take one core , so if you have 2 cpu cores so for best performance 2 workers is enough for you ( like Thread pool )
-            you can check your CPU core by ( const numOfCPUs = require("os").cpus().length; )
-    - you can use pm2 package to use cluster workers automatically without writing cluter code like in cluster.js
-        to install ( sudo npm install -g pm2 ) 
-        now you can use no-cluster.js file in cluster mode by (pm2 start no-cluster.js -i 0) 
-        0 here means use best number of workers according to this computer but if you write number that's means specific number of worker
-        and to stop using pm2 ( pm2 stop no-cluster.js)
-
-* Worker Thread Module (worker_thread.js and main-thread.js): 
-    - The worker threads module enables the use of threads that execute JavaScript in parallel
-    - difference between cluster Module and Worker Thread Module :
-        - The cluster module can be used to run multiple instances of Node.js that can distribute workloads
-        - worker_threads module allows running multiple application threads within a single Node.js instance
-            When process isolation is not needed, that is, no separate instances of V8, event loop and memory are needed, you should use worker_threads
-    - Steps : 
-        [1] const { Worker } = require("worker_threads");
-        [2] const worker = new Worker("./worker-thread.js");
-        [3] worker.on("message") // to take j variable from  worker-thread.js
-        [4] const { parentPort } = require("worker_threads"); then parentPort.postMessage(j); in worker_thread.js to send j variable
-
-
-* Exit on uncaught error 
-process.on(‘uncaughtException’, err => { 
-    console.error(‘there was an uncaught error : ${err} ‘ ) ;
-    process.exit(1);
-})
 
 ***************************************** NodeJs *****************************************
 
