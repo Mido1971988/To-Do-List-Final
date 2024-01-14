@@ -33224,8 +33224,15 @@ but in nextjs by default will combine those 2 fetches to one fetch.
     [2] @use "./sass/variables/colors"; then use colors.name of variable ( like sidebar{color:colors.$alt})
 
 * Nesting (check it on main.scss file)
+    .parent { &.green{ color : green } } means .parent.green{ color : green }
+    .parent { &:hover{ color : green } } means .parent:hover{ color : green }
+    note : we used & instead of parent because we can not use .parent { .parent.green{ color : green } }
 
 * Property Declarations And Placeholder (check it on main.scss file)
+    placeholder :
+        %main-box{ color : green }
+        means there is no element has class called .main-box but you can use %main-box{ color : green } as variable (Placeholder) use it inside different classes like : 
+        .ads { @extend %main-box ; font-size : 20px} means .ads { @extend color : green ;  font-size : 20px ; }
 
 * if & else (check it on main.scss file)
 
@@ -33328,6 +33335,24 @@ but in nextjs by default will combine those 2 fetches to one fetch.
 * built-n Module ( path , events , fs , stream , http )
 
 * Path check index.js
+    console.log(path.basename(__filename)); // will return file name
+    console.log(path.basename(__dirname)); // will return directory path without file name
+
+    console.log(path.extname(__filename)); // will give you extension of file name
+    console.log(path.extname(__dirname)); // will give you nothing because __dirname give you directory path without file name
+
+    console.log(path.parse(__filename)); // will return object with root , dir , base , ext , name properties
+    console.log(path.format(path.parse(__filename))); // will give you directory again
+
+    console.log(path.isAbsolute(__filename));
+    console.log(path.isAbsolute("./data.json"));
+
+    Path.join() check index.js
+    path.resolve() / means absolute path ,  // means root  check index.js
+
+    * difference between absolute path and relative path ?
+        absolute path means path from root of project like (/Users/Vishwas/course/NodeJS/index.js) so you can write it at any directory
+        relative path means path from current directory like (./jsonFiles/data.json) so you can not write it at another directory
 
 * Events (Built-in) : 
     steps : 
@@ -33343,11 +33368,13 @@ but in nextjs by default will combine those 2 fetches to one fetch.
     https://youtu.be/br8VB99qPzE?si=hzlOvXD3RO8_kPP2
 
 * fs(file system) ( check Exp. in index.js) :
-    * NodeJs has built-in Async methods ( like fs.readFile() or fs.writeFile() )  not like JS needs browsers or Web Api to do Async
+    * NodeJs has buit-in sync methods ( like fs.readFileSync(path , options) or fs.writeFileSync(file , data , options) )
+    * NodeJs has built-in Async methods ( like fs.readFile(filename , encoding , callback) or fs.writeFile(file , data , options , callback) )  not like JS needs browsers or Web Api to do Async
     * fs.writeFile() method by default will overwrite any content in file so we can add {flag: "a",}
         to append to the file not to overwrite
-    * promise with fs : performance in regular fs is better than fs promise (check Exp. in index.js)
-    * fs.appendFile will create file if not exist the add text inside it 
+    * promise with fs ( async..await or .then()) : performance in regular fs is better than fs promise (check Exp. in index.js)
+    * fs.appendFile will create file if not exist then add text inside it 
+    
 * Stream :
     - is a sequence of data that is being moved from one point to another over time
     - Stream is infact a built-in node module that inherits from the event emitter class 
