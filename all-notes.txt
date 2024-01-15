@@ -33441,6 +33441,14 @@ but in nextjs by default will combine those 2 fetches to one fetch.
     
 * Event Loop ( see Experiment in event-loop.js): 
     * note : see picture in 7:55 to understand event loop cycle ( https://youtu.be/L18RHG2DwwA?si=wt9JNr9wnrhR-nkf )
+    * note : process.nextTick(). Every time the event loop takes a full trip, we call it a tick.
+        When we pass a callback function to process.nextTick(), we instruct the engine to invoke this function at the end of the current operation, before the next event loop tick starts:
+    * note : To add a callback function to the I/O queue, we can use most of the async methods from the built-in Node.js modules like readFile()
+    * note :To add a callback function to the Check queue
+    Use setImmediate()
+    * note :To add a callback function to the close queue
+    Use setImmediate()
+    
     Order of Executions : 
     1.Any callbacks in the micro task queues are executed. 
         First, tasks in the nextTick queue and only then tasks in the promise queue
