@@ -33375,22 +33375,23 @@ but in nextjs by default will combine those 2 fetches to one fetch.
     * promise with fs ( async..await or .then()) : performance in regular fs is better than fs promise (check Exp. in index.js)
     * fs.appendFile will create file if not exist then add text inside it 
     
-* Stream :
+* Stream ( check exp. in index.js):
     - is a sequence of data that is being moved from one point to another over time
     - Stream is infact a built-in node module that inherits from the event emitter class 
-        that’s why readableStream has on method ( inherited it from event emitter class)
+        that’s why readableStream has on method ( inherited it from event emitter class) ( callback of on method recieve chunk data as an argument)
+    - data event will be fired automatically ( no need to emitt it ) when data is received
 
     - Types of Streams
-        [1] Readable streams from which data can be read Ex: Reading from a file as readable stream
-        [2] Writable streams to which we can write data Ex: Writing to a file as writable stream
+        [1] Readable streams from which data can be read Ex: Reading from a file as readable stream ( const readableStream = fs.createReadStream(path , options))
+        [2] Writable streams to which we can write data Ex: Writing to a file as writable stream ( const writeableStream = fs.createWriteStream(path , options))
         [3] Duplex streams that are both Readable and Writable Ex: Sockets as a duplex stream
         [4] Transform streams that can modify or transform the data as it is written and read 
             Ex: File compression where you can write compressed data and read de-compressed data to and from a file as a transform stream
 
     - default chunk size if 64 bits but you can change this by addin highWaterMark: 2 (2bits) to options object 
-    - data event will be fired automatically ( no need to emitt it ) when data is received
     - you can use pipe method instead of data event ( check exp. in index.js)
     - chained pipe ( works only with specific destination stream types : readable , duplex or transform Streams)
+    like readableStream.pipe(gzip).pipe(writableStream)
     
 * HTTP Module :
     - HTTP module extend EventEmitter Class 
@@ -33408,6 +33409,7 @@ but in nextjs by default will combine those 2 fetches to one fetch.
         fs.createReadStream("./index.html").pipe(res) 
         is better than 
         res.end(fs.readFileSync("./index.html"))
+        * note : here we added pipe.(res) stream not pipe(res.end()) because by default will emitt and end() automatically once stream finishs reading
     - if you want to add dynamic html ( for exp. add name from server to html file before send it as response) ( you can't use here pipe)
         [1] let html = fs.readFileSync("./index.html" , "utf-8")
         [2] const name = "Soliman"
@@ -33420,9 +33422,10 @@ but in nextjs by default will combine those 2 fetches to one fetch.
 * Thread Pool
     - when you try to do Async in NodeJs , NodeJs will try to do it using native Async method ( kernal ) in 
         your operating system and if that not possible then will try to use Thread Pool 
-
-    - Libuv thread pool as the name indicates is literally a pool of threads, 
-    that NodeJS uses to offload time-consuming tasks ( like crypto.pbkdf2 ) 
+  
+    - Libuv thread pool as the name indicates is literally a pool of threads 
+    - crypto.pbkdf2Sync() method is Sync and will block the Thread
+    - crypto.pbkdf2() Async and NodeJS uses Libuv thread pool to offload time-consuming tasks
     and ensures the main thread is not blocked for a long time (Asynchronous)
     
     - videos to understand better :
@@ -33433,7 +33436,7 @@ but in nextjs by default will combine those 2 fetches to one fetch.
         * note : each thread take one cpu core from your laptop 
             for exp. if you have 4 cpu cores so for best performance make size of Thread pool to 4
             if you make size of thread pool to 8 so each core will take 2 threads so will not give you best performance
-    - https.requesr is a network operation not CPU operation so will not use Thread pool will use native Async method
+    - https.request is a network operation not CPU operation so will not use Thread pool will use native Async method
         so no matter what is the Thread pool size if you make a request or 12 request all will be same time
     
 * Event Loop ( see Experiment in event-loop.js): 
