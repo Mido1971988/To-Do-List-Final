@@ -33569,9 +33569,10 @@ but in nextjs by default will combine those 2 fetches to one fetch.
     - Steps : 
         [1] const { Worker } = require("worker_threads");
         [2] const worker = new Worker("./worker-thread.js");
-        [3] worker.on("message") // to take j variable from  worker-thread.js
-        [4] const { parentPort } = require("worker_threads"); then parentPort.postMessage(j); in worker_thread.js to send j variable
-
+        [3] const { parentPort } = require("worker_threads"); 
+        then parentPort.postMessage(j); in worker_thread.js to send j variable
+        [4] worker.on("message" , callbackFunc ) // callbackFunc will accept argument passed to parentPort.postMessage(j) as arguemnt so you can access j variable from  worker-thread.js
+        
 
 * Exit on uncaught error 
 process.on(‘uncaughtException’, err => { 
@@ -33589,7 +33590,17 @@ Express :
         [2] const express = require("express")
         [3] const app = express();
         [4] app has alot of methods like ( get , listen , ...)
+    
+    - app.get("/" , (req,res) => { res.send("Home Page)}) instead of 
+        const server = http.createServer((req,res) => { if(req.url === "/") {res.writeHead(...) res.end("Home Page)} })
+        * note : res.send() implements res.write, res.setHeaders and res.end
+        * note : res.sendFile("./view/index.html" , { root : __dirname })
+        * note : res.redirect(301 , "/new-page.html") // we added 301 because expressJS by default add 302 to response and this is not good for SEO
+
+    - app.listen(port , callback) instead of server.listen(port , callback)
+    
     - express accepts regular expression like ("^/$|/index(.html)?") in app.get()
+    
     - Express handle 404 page automatically
 
 * custom 404 Page : 
@@ -33600,18 +33611,28 @@ Express :
 * Route Hanlder 
     you can add 3rd parameter ( next ) so ypu can chain callback function and will invoke next callback when you write next()
     you can chain callback function in array like this ( app.get("/chain(.html)?" , [one , two , three]) )
+    * note : next is like nextResponse in nextJS Middleware check ther to understand
 
 * Middleware 
     - anything between request and response
     - there are 3 types : 
         [1] built-in 
-            (a) app.use(express.json)
-            (b) app.use("/" , express.static(path.join(__dirname, "/public" ))) without it you can cannot link css or images to html file
-            (c) app.use(express.urlencoded({ extended: false})) // add before all routes so will be availabe for them
+            (a) app.use(express.json()) // to handle json data 
+            (b) app.use("/" , express.static(path.join(__dirname, "/public" ))) //  without it you can cannot link css or images to html file
+            (c) app.use(express.urlencoded({ extended: false})) // to handle urlencoded data like Form date 
+            * note : add before all routes so will be availabe for them
         [2] custom 
             like // custom Middleware logger in server.js
+            like // Error Handling in server.js ( app.use(errorHandler) )
         [3] from 3rd party
-            like // 3rd party Middleware cors in server.js
+            // 3rd party Middleware cors
+            [1] npm i cors
+            [2] steps like  in server.js
+
+        * note : difference between app.use() and app.all() ? 
+        where app.use('/api') will match both the route /api as well as any routes that extend /api, 
+        app.all('/api/*') will ONLY match routes that extend /api (i.e /api/resource, and NOT /api alone).
+
 * Routes 
     steps (we moved index , new-page and old-page to root.js and then used Routes) : 
     [1] create file to handle Routes ( routes/subdir.js) and inside it use ( router.get() )
